@@ -8,10 +8,15 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.JoystickSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -22,8 +27,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  private final JoystickSubsystem m_joystickSubsystem = new JoystickSubsystem();
+
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private final DefaultDrive m_defaultDrive = new DefaultDrive(m_driveSubsystem, m_joystickSubsystem);
+  private Joystick joystick;
 
 
 
@@ -31,8 +41,12 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    joystick = m_joystickSubsystem.getJoystick();
+
     // Configure the button bindings
     configureButtonBindings();
+
+    m_defaultDrive.initialize();
   }
 
   /**
@@ -42,6 +56,9 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+//    JoystickButton trigger = new JoystickButton(joystick, 1);  FOR FUTURE REFRENCE
+//    trigger.whenPressed(new DefaultDrive());
+
   }
 
 
@@ -53,5 +70,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return m_autoCommand;
+  }
+
+  public Command getCartesianDrive() {
+    return m_defaultDrive;
   }
 }
