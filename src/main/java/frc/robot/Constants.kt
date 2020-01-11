@@ -19,13 +19,13 @@ package frc.robot
 object Constants {
 
     //MotorControllers
-    val frontRightWheelPort = -1
-    val frontLeftWheelPort = -1
-    val backRightWheelPort = -1
-    val backLeftWheelPort = -1
+    val frontRightWheelPort =   1
+    val frontLeftWheelPort =    2
+    val backRightWheelPort =    3
+    val backLeftWheelPort =     4
 
     //Inputs
-    val joystickPort = -1
+    val joystickPort = 1
 
 
 

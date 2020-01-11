@@ -1,10 +1,12 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2020.1.2"
+    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+def var = targetCompatibility = JavaVersion.VERSION_11
+var
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
@@ -44,6 +46,7 @@ def includeDesktopSupport = false
 // Also defines JUnit 4.
 dependencies {
     implementation wpi.deps.wpilib()
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
     nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
 

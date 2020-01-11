@@ -22,14 +22,23 @@ class DriveSubsystem : SubsystemBase() {
 
 
     var frontLeftMotor = WPI_VictorSPX(Constants.frontLeftWheelPort)
-    var frontRightMotor = WPI_TalonSRX(Constants.frontRightWheelPort)
-    var backLeftMotor = WPI_TalonSRX(Constants.backLeftWheelPort)
-    var backRightMotor = WPI_TalonSRX(Constants.backRightWheelPort)
+    var frontRightMotor = WPI_VictorSPX(Constants.frontRightWheelPort)
+    var backLeftMotor = WPI_VictorSPX(Constants.backLeftWheelPort)
+    var backRightMotor = WPI_VictorSPX(Constants.backRightWheelPort)
 
     var mecanum = MecanumDrive(frontLeftMotor,backLeftMotor,frontRightMotor,backRightMotor)
 
     fun driveCartesan(x: Double, y: Double, rotation: Double) {
-        mecanum.driveCartesian(x, y, rotation)
+        var trueX = x
+        var trueY = y
+        var trueR = rotation
+
+        if (Math.abs(trueX) <= 0.2) trueX = 0.0
+        if (Math.abs(trueY) <= 0.2) trueY = 0.0
+        if (Math.abs(trueR) <= 0.2) trueR = 0.0
+
+
+        mecanum.driveCartesian(trueX, -trueY, trueR)
     }
 
     fun DriveSubsystem() {
