@@ -25,7 +25,9 @@ object Constants {
     val backLeftWheelPort =     4
 
     //Inputs
+    val xboxPort = 0
     val joystickPort = 1
+
 
 
 

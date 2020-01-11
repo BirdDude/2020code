@@ -35,10 +35,11 @@ class DriveSubsystem : SubsystemBase() {
 
         if (Math.abs(trueX) <= 0.2) trueX = 0.0
         if (Math.abs(trueY) <= 0.2) trueY = 0.0
-        if (Math.abs(trueR) <= 0.2) trueR = 0.0
+        if (Math.abs(trueR) <= 0.5) trueR = 0.0
 
 
-        mecanum.driveCartesian(trueX, -trueY, trueR)
+        if(trueR > 0) mecanum.driveCartesian(trueX, -trueY, Math.pow(trueR, 2.0))
+        else mecanum.driveCartesian(trueX, -trueY, Math.pow(trueR, 2.0)*-1)
     }
 
     fun DriveSubsystem() {
