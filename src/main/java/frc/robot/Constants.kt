@@ -28,7 +28,8 @@ object Constants {
     val xboxPort = 0
     val joystickPort = 1
 
-
+    //Data Inputs
+//    val gyroPort = -1
 
 
 }
