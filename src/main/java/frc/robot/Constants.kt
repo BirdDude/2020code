@@ -28,6 +28,14 @@ object Constants {
     val xboxPort = 0
     val joystickPort = 1
 
+    //Pathfinding
+    val dt = 0.05
+    val maxVel = 0.0
+    val maxAcc = 0.0
+    val maxJerk = 0.0
+    val wheelBase_width = 0.0
+    val wheelBase_depth = 0.0
+
     //Data Inputs
 //    val gyroPort = -1
 

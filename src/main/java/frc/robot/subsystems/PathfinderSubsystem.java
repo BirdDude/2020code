@@ -7,14 +7,17 @@
 
 package frc.robot.subsystems;
 
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import grpl.pathfinder.coupled.*;
 
-public class PathfindingSubsystem extends SubsystemBase {
+public class PathfinderSubsystem extends SubsystemBase {
   /**
    * Creates a new ExampleSubsystem.
    */
-  public PathfindingSubsystem() {
+
+
+  public PathfinderSubsystem() {
+
 
   }
 
