@@ -5,14 +5,30 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+/**
+ * For Ease of Copying and Pasting
+    var frontLeft   =
+    var frontRight  =
+    var backLeft    =
+    var backRight   =
+
+ */
+
 package frc.robot.subsystems
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase
-import com.ctre.phoenix.motorcontrol.can.*
-import edu.wpi.first.hal.FRCNetComm
-import edu.wpi.first.wpilibj.CounterBase
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX
+import com.kauailabs.navx.frc.AHRS
 import edu.wpi.first.wpilibj.Encoder
+import edu.wpi.first.wpilibj.SPI
 import edu.wpi.first.wpilibj.drive.MecanumDrive
+import edu.wpi.first.wpilibj.geometry.Pose2d
+import edu.wpi.first.wpilibj.geometry.Rotation2d
+import edu.wpi.first.wpilibj.geometry.Translation2d
+import edu.wpi.first.wpilibj.kinematics.MecanumDriveKinematics
+import edu.wpi.first.wpilibj.kinematics.MecanumDriveOdometry
+import edu.wpi.first.wpilibj.kinematics.MecanumDriveWheelSpeeds
+import edu.wpi.first.wpilibj.trajectory.constraint.MecanumDriveKinematicsConstraint
+import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
 
 
@@ -21,22 +37,53 @@ import frc.robot.Constants
  */
 class DriveSubsystem : SubsystemBase() {
 
-
-
+    //Motor/Drive Init
     var frontLeftMotor = WPI_VictorSPX(Constants.frontLeftWheelPort)
     var frontRightMotor = WPI_VictorSPX(Constants.frontRightWheelPort)
     var backLeftMotor = WPI_VictorSPX(Constants.backLeftWheelPort)
     var backRightMotor = WPI_VictorSPX(Constants.backRightWheelPort)
-
     var mecanum = MecanumDrive(frontLeftMotor,backLeftMotor,frontRightMotor,backRightMotor)
 
-    var encodereFrontLeft = Encoder(0, 0, false, CounterBase.EncodingType.k2X)
-    var encoderFrontRight = Encoder(0, 0, false, CounterBase.EncodingType.k2X)
-    var encodereBackLeft  = Encoder(0, 0, false, CounterBase.EncodingType.k2X)
-    var encoderBackRight  = Encoder(0, 0, false, CounterBase.EncodingType.k2X)
+
+    //Encoder Start Pos
+//    var encoderFrontLeftStart  = frontLeftMotor.getSelectedSensorPosition(0)
+//    var encoderFrontRightStart = frontRightMotor.getSelectedSensorPosition(0)
+//    var encoderBackLeftStart   = backLeftMotor.getSelectedSensorPosition(0)
+//    var encoderBackRightStart  = backRightMotor.getSelectedSensorPosition(0)
 
 
-    fun driveCartesan(x: Double, y: Double, rotation: Double) {
+    //Encoders
+    var frontLeftEncoder   = Encoder(0, 0, false)
+    var frontRightEncoder  = Encoder(0, 0, false)
+    var backLeftEncoder    = Encoder(0, 0, false)
+    var backRightEncoder   = Encoder(0, 0, false)
+
+
+    //Robot Bounds
+    var frontRightPos = Translation2d(0.381, 0.381)
+    var frontLeftPos = Translation2d(-0.381, 0.381)
+    var backRightPos = Translation2d(0.381, -0.381)
+    var backLeftPos = Translation2d(-0.381, -0.381)
+    var kDriveKinematics = MecanumDriveKinematics(frontLeftPos, frontRightPos, backLeftPos, backRightPos)
+    var kDriveConstraints = MecanumDriveKinematicsConstraint(kDriveKinematics, Constants.maxVel)
+
+
+    //Gyro Init
+    val gyro = AHRS(SPI.Port.kMXP)
+
+
+
+    var m_odometry = MecanumDriveOdometry(kDriveKinematics, Rotation2d.fromDegrees(getHeading()), Pose2d(Constants.startPosLong, Constants.startPosShort, Rotation2d.fromDegrees(getHeading())))
+    lateinit var m_pose: Pose2d
+    lateinit var speed: MecanumDriveWheelSpeeds
+
+    init {
+
+    }
+
+
+
+    fun driveCartesan(x: Double, y: Double, rotation: Double, angle: Double) {
         var trueX = x
         var trueY = y
         var trueR = rotation
@@ -46,16 +93,18 @@ class DriveSubsystem : SubsystemBase() {
         if (Math.abs(trueR) <= 0.5) trueR = 0.0
 
 
-        if(trueR > 0) mecanum.driveCartesian(trueX, -trueY, Math.pow(trueR, 2.0))
-        else mecanum.driveCartesian(trueX, -trueY, Math.pow(trueR, 2.0)*-1)
-    }
-
-    fun DriveSubsystem() {
-
+        if(trueR > 0) mecanum.driveCartesian(trueX, -trueY, Math.pow(trueR, 2.0), angle)
+        else mecanum.driveCartesian(trueX, -trueY, Math.pow(trueR, 2.0)*-1, angle)
     }
 
     override fun periodic() {
         // This method will be called once per scheduler run
+        speed = MecanumDriveWheelSpeeds(frontLeftEncoder.rate, frontRightEncoder.rate, backLeftEncoder.rate, backRightEncoder.rate)
 
+        m_pose = m_odometry.update(Rotation2d.fromDegrees(getHeading()), speed)
+    }
+
+    fun getHeading(): Double {
+        return Math.IEEEremainder(gyro.getAngle(), 360.0) * if (Constants.isGyroReversed) -1.0 else 1.0
     }
 }

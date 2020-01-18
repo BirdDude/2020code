@@ -29,6 +29,7 @@ object Constants {
     val joystickPort = 1
 
     //Pathfinding
+    val isGyroReversed = false
     val dt = 0.05
     val maxVel = 0.0
     val maxAcc = 0.0
@@ -37,6 +38,9 @@ object Constants {
     val wheelBase_depth = 0.0
     val kRamseteB = 2.0
     val kRamseteZeta = 0.7
+    val startPosLong = 5.0
+    val startPosShort = 13.5
+
 
     //Data Inputs
 //    val gyroPort = -1

@@ -13,11 +13,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.JoystickSubsystem;
-import frc.robot.subsystems.XboxSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -31,7 +28,6 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   private final JoystickSubsystem m_joystickSubsystem = new JoystickSubsystem();
   private final XboxSubsystem m_xboxSubsystem = new XboxSubsystem();
-
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   private final DefaultDrive m_defaultDrive = new DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem);
