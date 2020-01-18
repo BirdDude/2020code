@@ -35,6 +35,8 @@ object Constants {
     val maxJerk = 0.0
     val wheelBase_width = 0.0
     val wheelBase_depth = 0.0
+    val kRamseteB = 2.0
+    val kRamseteZeta = 0.7
 
     //Data Inputs
 //    val gyroPort = -1

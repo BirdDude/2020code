@@ -10,6 +10,8 @@ package frc.robot.subsystems
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import com.ctre.phoenix.motorcontrol.can.*
 import edu.wpi.first.hal.FRCNetComm
+import edu.wpi.first.wpilibj.CounterBase
+import edu.wpi.first.wpilibj.Encoder
 import edu.wpi.first.wpilibj.drive.MecanumDrive
 import frc.robot.Constants
 
@@ -27,6 +29,12 @@ class DriveSubsystem : SubsystemBase() {
     var backRightMotor = WPI_VictorSPX(Constants.backRightWheelPort)
 
     var mecanum = MecanumDrive(frontLeftMotor,backLeftMotor,frontRightMotor,backRightMotor)
+
+    var encodereFrontLeft = Encoder(0, 0, false, CounterBase.EncodingType.k2X)
+    var encoderFrontRight = Encoder(0, 0, false, CounterBase.EncodingType.k2X)
+    var encodereBackLeft  = Encoder(0, 0, false, CounterBase.EncodingType.k2X)
+    var encoderBackRight  = Encoder(0, 0, false, CounterBase.EncodingType.k2X)
+
 
     fun driveCartesan(x: Double, y: Double, rotation: Double) {
         var trueX = x

@@ -7,14 +7,24 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.MecanumDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.constraint.MecanumDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import grpl.pathfinder.coupled.*;
+import edu.wpi.first.wpilibj.trajectory.*;
+import frc.robot.Constants;
 
 public class PathfinderSubsystem extends SubsystemBase {
-  /**
-   * Creates a new ExampleSubsystem.
-   */
 
+  Translation2d frontRight = new Translation2d(0.381, 0.381);
+  Translation2d frontLeft = new Translation2d(-0.381, 0.381);
+  Translation2d backRight = new Translation2d(0.381, -0.381);
+  Translation2d backLeft = new Translation2d(-0.381, -0.381);
+
+
+
+  MecanumDriveKinematics kDriveKinematics = new MecanumDriveKinematics(frontLeft, frontRight, backLeft, backRight);
+  MecanumDriveKinematicsConstraint kDriveMecanum = new MecanumDriveKinematicsConstraint(kDriveKinematics, Constants.INSTANCE.getMaxVel());
 
   public PathfinderSubsystem() {
 
