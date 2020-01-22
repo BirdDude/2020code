@@ -16,6 +16,7 @@
 
 package frc.robot.subsystems
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX
 import com.kauailabs.navx.frc.AHRS
 import edu.wpi.first.wpilibj.SPI
@@ -37,10 +38,10 @@ import frc.robot.Constants
 class DriveSubsystem : SubsystemBase() {
 
     //Motor/Drive Init
-    var frontLeftMotor = WPI_VictorSPX(Constants.frontLeftWheelPort)
-    var frontRightMotor = WPI_VictorSPX(Constants.frontRightWheelPort)
-    var backLeftMotor = WPI_VictorSPX(Constants.backLeftWheelPort)
-    var backRightMotor = WPI_VictorSPX(Constants.backRightWheelPort)
+    var frontLeftMotor = WPI_TalonSRX(Constants.frontLeftWheelPort)
+    var frontRightMotor = WPI_TalonSRX(Constants.frontRightWheelPort)
+    var backLeftMotor = WPI_TalonSRX(Constants.backLeftWheelPort)
+    var backRightMotor = WPI_TalonSRX(Constants.backRightWheelPort)
     var mecanum = MecanumDrive(frontLeftMotor,backLeftMotor,frontRightMotor,backRightMotor)
 
 
@@ -107,11 +108,13 @@ class DriveSubsystem : SubsystemBase() {
 
     override fun periodic() {
         // This method will be called once per scheduler run
-        speed = MecanumDriveWheelSpeeds(frontLeftMotor.selectedSensorVelocity * Constants.wheelCircum, frontRightMotor.selectedSensorVelocity * Constants.wheelCircum,
-                                        backLeftMotor.selectedSensorVelocity * Constants.wheelCircum,  backRightMotor.selectedSensorVelocity * Constants.wheelCircum)
 
-
-        m_pose = m_odometry.update(Rotation2d.fromDegrees(getHeading()), speed)
+        /** Re-add when Added Encoders */
+//        speed = MecanumDriveWheelSpeeds(frontLeftMotor.selectedSensorVelocity * Constants.wheelCircum, frontRightMotor.selectedSensorVelocity * Constants.wheelCircum,
+//                                        backLeftMotor.selectedSensorVelocity * Constants.wheelCircum,  backRightMotor.selectedSensorVelocity * Constants.wheelCircum)
+//
+//
+//        m_pose = m_odometry.update(Rotation2d.fromDegrees(getHeading()), speed)
     }
 
     fun getHeading(): Double {

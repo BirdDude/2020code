@@ -34,11 +34,11 @@ class DefaultDrive
     // Called every time the scheduler runs while the command is scheduled.
     override fun execute() {
         //FLIGHTSTICK
-//        m_DriveSubsystem.driveCartesan(m_joystickSubsystem.joystick.x, m_joystickSubsystem.joystick.y, m_joystickSubsystem.joystick.twist)
+        m_DriveSubsystem.driveCartesan(m_joystickSubsystem.joystick.x, m_joystickSubsystem.joystick.y, m_joystickSubsystem.joystick.twist)
 
         //XBOX
-        m_DriveSubsystem.driveCartesan(m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getY(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kRight), m_DriveSubsystem.gyro.angle)
-
+//        m_DriveSubsystem.driveCartesan(m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getY(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kRight), m_DriveSubsystem.gyro.angle)
+//        m_DriveSubsystem.driveCartesan(m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getY(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kRight))
     }
 
     // Called once the command ends or is interrupted.

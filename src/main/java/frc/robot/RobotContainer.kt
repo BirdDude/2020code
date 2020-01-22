@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.MecanumControllerCommand
 import frc.robot.commands.DefaultDrive
-import frc.robot.commands.ExampleCommand
 import frc.robot.subsystems.DriveSubsystem
 import frc.robot.subsystems.ExampleSubsystem
 import frc.robot.subsystems.JoystickSubsystem
@@ -35,7 +34,6 @@ class RobotContainer {
     private val m_xboxSubsystem = XboxSubsystem()
 
 
-    private val m_autoCommand = ExampleCommand(m_exampleSubsystem)
     private val m_defaultDrive = DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem)
     private val joystick: Joystick
 
@@ -59,6 +57,10 @@ class RobotContainer {
      * @return the command to run in autonomous
      */
 
+//    fun getAutonomousCommand(): Command {
+//
+//    }
+
 
     val followTrajectoryCommand: Command
         get() {
@@ -71,18 +73,15 @@ class RobotContainer {
             val command = MecanumControllerCommand(
                     exampleTrajectory,
                     Supplier {m_driveSubsystem.m_pose},
-//                    m_pathfinderCommand.getFeedForward(),
                     m_driveSubsystem.kDriveKinematics,
                     PIDController(Constants.xP, Constants.xI, Constants.xD, Constants.dt),
                     PIDController(Constants.yP, Constants.yI, Constants.yD, Constants.dt),
                     ProfiledPIDController(Constants.tP, Constants.tI, Constants.tD, TrapezoidProfile.Constraints(Constants.maxRotVel, Constants.maxRotAcc), Constants.dt),
                     Constants.maxWheelVel,
                     Consumer { m_driveSubsystem.getWheelSpeeds() },
-//                    driveSubsystem::setVoltage,
                     m_driveSubsystem
             )
-            return command.andThen(
-                    Runnable { m_driveSubsystem.driveCartesan(0.0, 0.0, 0.0, 0.0); })
+            return command.andThen(Runnable { m_driveSubsystem.driveCartesan(0.0, 0.0, 0.0, 0.0) })
         }
 
     /**
@@ -92,6 +91,11 @@ class RobotContainer {
         joystick = m_joystickSubsystem.joystick
         // Configure the button bindings
         configureButtonBindings()
-        m_defaultDrive.initialize()
+//        m_defaultDrive.initialize()
     }
+
+    fun getCartesianDrive():Command {
+        return m_defaultDrive
+    }
+
 }

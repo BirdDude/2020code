@@ -22,44 +22,46 @@ object Constants {
     val wheelRad = 0.0762
     val wheelCircum = 2 * Math.PI * wheelRad
 
+
     //MotorControllers
-    val frontRightWheelPort =   1
-    val frontLeftWheelPort =    2
-    val backRightWheelPort =    3
-    val backLeftWheelPort =     4
+    const val frontLeftWheelPort =    1
+    const val frontRightWheelPort =   2
+    const val backLeftWheelPort =     3
+    const val backRightWheelPort =    4
+
 
     //Inputs
-    val xboxPort = 0
-    val joystickPort = 1
+    const val xboxPort = 0
+    const val joystickPort = 1
 
     /**Pathfinding */
     //DATA
-        val isGyroReversed = false
-        val dt = 0.05
-        val maxVel = 0.0
-        val maxAcc = 0.0
-        val maxRotVel = 0.0
-        val maxRotAcc = 0.0
-        val maxWheelVel = 0.0
-        val startPosLong = 5.0
-        val startPosShort = 13.5
-        val sVolts = -1.0
-        val vVolts = -1.0
-        val aVolts = -1.0
+    const val isGyroReversed = false
+    const val dt = 0.05
+    const val maxVel = 0.0
+    const val maxAcc = 0.0
+    const val maxRotVel = 0.0
+    const val maxRotAcc = 0.0
+    const val maxWheelVel = 0.0
+    const val startPosLong = 5.0
+    const val startPosShort = 13.5
+    const val sVolts = -1.0
+    const val vVolts = -1.0
+    const val aVolts = -1.0
 
     //PID
         //Horizontal Travel
-        val xP = 0.0
-        val xI = 0.0
-        val xD = 0.0
+    const val xP = 0.0
+    const val xI = 0.0
+    const val xD = 0.0
         //Vertical Travel
-        val yP = 0.0
-        val yI = 0.0
-        val yD = 0.0
+    const val yP = 0.0
+    const val yI = 0.0
+    const val yD = 0.0
         //Rotation
-        val tP = 0.0
-        val tI = 0.0
-        val tD = 0.0
+    const val tP = 0.0
+    const val tI = 0.0
+    const val tD = 0.0
     /**
         //FrontLeft Wheel (Maybe Unneeded)
         val flP = 0.0
