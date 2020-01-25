@@ -7,7 +7,6 @@
 
 package frc.robot.commands
 
-import edu.wpi.first.wpilibj.GenericHID
 import edu.wpi.first.wpilibj2.command.CommandBase
 import frc.robot.subsystems.*
 
@@ -15,13 +14,13 @@ import frc.robot.subsystems.*
  * An example command that uses an example subsystem.
  */
 
-class DefaultDrive
-/**
+class DefaultDrive(private val m_DriveSubsystem: DriveSubsystem, private val m_joystickSubsystem: JoystickSubsystem, private val m_xboxSubsystem: XboxSubsystem) : CommandBase() {
+
+    /**
  * Creates a new ExampleCommand.
  *
  * subsystem The subsystem used by this command.
  */
-(private val m_DriveSubsystem: DriveSubsystem, private val m_joystickSubsystem: JoystickSubsystem, private val m_xboxSubsystem: XboxSubsystem) : CommandBase() {
 
     init {
         // Use addRequirements() here to declare subsyste m dependencies.

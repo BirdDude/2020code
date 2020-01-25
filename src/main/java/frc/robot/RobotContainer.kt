@@ -12,11 +12,13 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.MecanumControllerCommand
+import edu.wpi.first.wpilibj2.command.PrintCommand
+import edu.wpi.first.wpilibj2.command.button.JoystickButton
+import frc.robot.Logic.RoboMath
+import frc.robot.Logic.VisionComms
 import frc.robot.commands.DefaultDrive
-import frc.robot.subsystems.DriveSubsystem
-import frc.robot.subsystems.ExampleSubsystem
-import frc.robot.subsystems.JoystickSubsystem
-import frc.robot.subsystems.XboxSubsystem
+import frc.robot.commands.RotateTo
+import frc.robot.subsystems.*
 import java.util.function.Consumer
 import java.util.function.Supplier
 
@@ -28,14 +30,18 @@ import java.util.function.Supplier
  */
 class RobotContainer {
     // The robot's subsystems and commands are defined here...
-    private val m_exampleSubsystem = ExampleSubsystem()
     private val m_driveSubsystem = DriveSubsystem()
     private val m_joystickSubsystem = JoystickSubsystem()
     private val m_xboxSubsystem = XboxSubsystem()
+    private val m_LidarSubsystem = LidarSubsystem()
+    private val m_rotationSubsystem = RotationSubsystem(m_driveSubsystem)
 
 
     private val m_defaultDrive = DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem)
+    private val m_rotateTo = RotateTo(m_rotationSubsystem, m_driveSubsystem)
     private val joystick: Joystick
+    private val m_visionComms = VisionComms(Constants.visionHost, Constants.visionPort)
+
 
     /**
      * Use this method to define your button->command mappings.  Buttons can be created by
@@ -46,7 +52,10 @@ class RobotContainer {
 //        JoystickButton trigger = new JoystickButton(joystick, 1);  FOR FUTURE REFRENCE
 //        trigger.whenPressed(new DefaultDrive());
 
+        JoystickButton(joystick, 11).whenPressed(Runnable { m_visionComms.startUp()  })
+        JoystickButton(joystick, 12).whenPressed(Runnable { m_visionComms.shutDown() })
 
+        JoystickButton(joystick, 1).whenPressed(Runnable { println("Variables: " + m_visionComms.retrieveData())})
     }
 
 //    An ExampleCommand will run in autonomous
@@ -62,13 +71,23 @@ class RobotContainer {
 //    }
 
 
-    val followTrajectoryCommand: Command
-        get() {
+    fun goToVisionTarget(): Command {
+
+
+        val startX = 0.0
+        val startY = 0.0
+        val startR = 0.0
+
+        //Assuming looking straight at target
+        val endX = RoboMath.targetX(m_driveSubsystem.getHeading(), m_LidarSubsystem.getLidar().getDistance().toDouble())
+        val endY = RoboMath.targetY(m_driveSubsystem.getHeading(), m_LidarSubsystem.getLidar().getDistance().toDouble())
+        val endR = -90.0
+
             val config = TrajectoryConfig(Constants.maxVel, Constants.maxAcc).setKinematics(m_driveSubsystem.kDriveKinematics).addConstraint(m_driveSubsystem.kDriveConstraints)
 
             val exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-                    Pose2d(0.0, 0.0, Rotation2d(0.0)),
-                    mutableListOf(Translation2d(1.0, 1.0), Translation2d(2.0, -1.0)), Pose2d(0.0, 0.0, Rotation2d(0.0)), config)
+                    Pose2d(startX, startY, Rotation2d(startR)),
+                    mutableListOf(), Pose2d(Translation2d(endX, endY), Rotation2d(endR)), config)
 
             val command = MecanumControllerCommand(
                     exampleTrajectory,
@@ -81,7 +100,7 @@ class RobotContainer {
                     Consumer { m_driveSubsystem.getWheelSpeeds() },
                     m_driveSubsystem
             )
-            return command.andThen(Runnable { m_driveSubsystem.driveCartesan(0.0, 0.0, 0.0, 0.0) })
+            return command.andThen(Runnable { m_driveSubsystem.driveCartesan(0.0, 0.0, 0.0) })
         }
 
     /**
@@ -89,6 +108,7 @@ class RobotContainer {
      */
     init {
         joystick = m_joystickSubsystem.joystick
+
         // Configure the button bindings
         configureButtonBindings()
 //        m_defaultDrive.initialize()

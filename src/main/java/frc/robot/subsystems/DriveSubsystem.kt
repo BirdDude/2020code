@@ -45,13 +45,6 @@ class DriveSubsystem : SubsystemBase() {
     var mecanum = MecanumDrive(frontLeftMotor,backLeftMotor,frontRightMotor,backRightMotor)
 
 
-    //Encoder Start Pos
-//    var encoderFrontLeftStart  = frontLeftMotor.getSelectedSensorPosition(0)
-//    var encoderFrontRightStart = frontRightMotor.getSelectedSensorPosition(0)
-//    var encoderBackLeftStart   = backLeftMotor.getSelectedSensorPosition(0)
-//    var encoderBackRightStart  = backRightMotor.getSelectedSensorPosition(0)
-
-
     //Robot Bounds
     var frontRightPos = Translation2d(0.381, 0.381)
     var frontLeftPos = Translation2d(-0.381, 0.381)
@@ -73,6 +66,7 @@ class DriveSubsystem : SubsystemBase() {
     init {
 
     }
+
 
 
 
@@ -102,6 +96,10 @@ class DriveSubsystem : SubsystemBase() {
 
         if(trueR > 0) mecanum.driveCartesian(trueX, -trueY, Math.pow(trueR, 2.0))
         else mecanum.driveCartesian(trueX, -trueY, Math.pow(trueR, 2.0)*-1)
+    }
+
+    fun autoCartesian(x: Double, y: Double, rotation: Double) {
+        mecanum.driveCartesian(x, y, rotation)
     }
 
 

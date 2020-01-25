@@ -18,21 +18,46 @@ package frc.robot
  */
 object Constants {
 
+    //Todo Everything here, oh no
+
     //Info (Meters)
     val wheelRad = 0.0762
     val wheelCircum = 2 * Math.PI * wheelRad
 
 
-    //MotorControllers
+    /**MotorControllers */
+    //Wheels
     const val frontLeftWheelPort =    1
     const val frontRightWheelPort =   2
     const val backLeftWheelPort =     3
     const val backRightWheelPort =    4
 
+    //Intake
+    const val intakePort = -1
 
-    //Inputs
+    //Shooter
+    const val shooterPort = -1
+
+    //Transport
+    const val transportPort = -1
+    const val transportWheelPort = -1
+
+    //Climb
+    const val climbRotor = -1
+    const val clumbWinch = -1
+
+    //Control Panel
+//    const val
+
+    /**Inputs */
+    //Controllers
     const val xboxPort = 0
     const val joystickPort = 1
+
+    //Vision
+    const val visionHost = "10.43.30.20"
+    const val visionPort = 9001
+
 
     /**Pathfinding */
     //DATA
@@ -42,12 +67,12 @@ object Constants {
     const val maxAcc = 0.0
     const val maxRotVel = 0.0
     const val maxRotAcc = 0.0
+    const val maxRotDeg = 0.0
     const val maxWheelVel = 0.0
     const val startPosLong = 5.0
     const val startPosShort = 13.5
-    const val sVolts = -1.0
-    const val vVolts = -1.0
-    const val aVolts = -1.0
+    const val sVolts = 0.0
+    const val vVolts = 0.0
 
     //PID
         //Horizontal Travel
@@ -62,30 +87,6 @@ object Constants {
     const val tP = 0.0
     const val tI = 0.0
     const val tD = 0.0
-    /**
-        //FrontLeft Wheel (Maybe Unneeded)
-        val flP = 0.0
-        val flI = 0.0
-        val flD = 0.0
-        //FrontRight Wheel (Maybe Unneeded)
-        val frP = 0.0
-        val frI = 0.0
-        val frD = 0.0
-        //BackLeft Wheel (Maybe Unneeded)
-        val blP = 0.0
-        val blI = 0.0
-        val bD = 0.0
-        //BackRight Wheel (Maybe Unneeded)
-        val brP = 0.0
-        val brI = 0.0
-        val brD = 0.0
-        */
-
-
-
-
-    //Data Inputs
-//    val gyroPort = -1
 
 
 }
