@@ -22,31 +22,41 @@ class DefaultDrive(private val m_DriveSubsystem: DriveSubsystem, private val m_j
  * subsystem The subsystem used by this command.
  */
 
+    var maxVel = 0.0
+    var maxAcc = 0.0
+    var end = false
+
     init {
         // Use addRequirements() here to declare subsyste m dependencies.
         addRequirements(m_DriveSubsystem)
     }
 
     // Called when the command is initially scheduled.
-    override fun initialize() {}
+    override fun initialize() {
+        end = false
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     override fun execute() {
+
+        maxVel = Math.max(m_DriveSubsystem.getWheelSpeeds().frontLeftMetersPerSecond, maxVel)
+        maxAcc = Math.max(m_DriveSubsystem.getWheelAcc(), maxAcc)
+
         //FLIGHTSTICK
         m_DriveSubsystem.driveCartesan(m_joystickSubsystem.joystick.x, m_joystickSubsystem.joystick.y, m_joystickSubsystem.joystick.twist)
 
         //XBOX
-//        m_DriveSubsystem.driveCartesan(m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getY(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kRight), m_DriveSubsystem.gyro.angle)
 //        m_DriveSubsystem.driveCartesan(m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getY(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kRight))
     }
 
     // Called once the command ends or is interrupted.
     override fun end(interrupted: Boolean) {
-
+        m_DriveSubsystem.driveCartesan(0.0, 0.0, 0.0)
+        end = false
     }
 
     // Returns true when the command should end.
     override fun isFinished(): Boolean {
-        return false
+        return end
     }
 }

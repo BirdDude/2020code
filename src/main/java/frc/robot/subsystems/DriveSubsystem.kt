@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.drive.MecanumDrive
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
+import edu.wpi.first.wpilibj.interfaces.Accelerometer
 import edu.wpi.first.wpilibj.kinematics.MecanumDriveKinematics
 import edu.wpi.first.wpilibj.kinematics.MecanumDriveOdometry
 import edu.wpi.first.wpilibj.kinematics.MecanumDriveWheelSpeeds
@@ -61,10 +62,10 @@ class DriveSubsystem : SubsystemBase() {
 
     var m_odometry = MecanumDriveOdometry(kDriveKinematics, Rotation2d.fromDegrees(getHeading()), Pose2d(Constants.startPosLong, Constants.startPosShort, Rotation2d.fromDegrees(getHeading())))
     lateinit var m_pose: Pose2d
-    lateinit var speed: MecanumDriveWheelSpeeds
+    lateinit var speed: () -> MecanumDriveWheelSpeeds
 
     init {
-
+        //Just me here, huh?
     }
 
 
@@ -93,9 +94,16 @@ class DriveSubsystem : SubsystemBase() {
         if (Math.abs(trueY) <= 0.2) trueY = 0.0
         if (Math.abs(trueR) <= 0.5) trueR = 0.0
 
+        println("Rotation: " + rotation)
 
         if(trueR > 0) mecanum.driveCartesian(trueX, -trueY, Math.pow(trueR, 2.0))
         else mecanum.driveCartesian(trueX, -trueY, Math.pow(trueR, 2.0)*-1)
+    }
+
+    fun driveCartesanRobot(x: Double, y: Double, rotation: Double) {
+        println("Rotation: " + rotation)
+
+        mecanum.driveCartesian(x, y, rotation)
     }
 
     fun autoCartesian(x: Double, y: Double, rotation: Double) {
@@ -108,20 +116,25 @@ class DriveSubsystem : SubsystemBase() {
         // This method will be called once per scheduler run
 
         /** Re-add when Added Encoders */
-//        speed = MecanumDriveWheelSpeeds(frontLeftMotor.selectedSensorVelocity * Constants.wheelCircum, frontRightMotor.selectedSensorVelocity * Constants.wheelCircum,
-//                                        backLeftMotor.selectedSensorVelocity * Constants.wheelCircum,  backRightMotor.selectedSensorVelocity * Constants.wheelCircum)
-//
-//
-//        m_pose = m_odometry.update(Rotation2d.fromDegrees(getHeading()), speed)
+        speed = { MecanumDriveWheelSpeeds(frontLeftMotor.selectedSensorVelocity * Constants.wheelCircum, frontRightMotor.selectedSensorVelocity * Constants.wheelCircum,
+                                        backLeftMotor.selectedSensorVelocity * Constants.wheelCircum,  backRightMotor.selectedSensorVelocity * Constants.wheelCircum) }
+
+
+        m_pose = m_odometry.update(Rotation2d.fromDegrees(getHeading()), speed.invoke())
     }
 
     fun getHeading(): Double {
-        return Math.IEEEremainder(gyro.getAngle(), 360.0) * if (Constants.isGyroReversed) -1.0 else 1.0
+//        return Math.IEEEremainder(gyro.getAngle(), 360.0) * if (Constants.isGyroReversed) -1.0 else 1.0
+        return gyro.angle
     }
 
     fun getWheelSpeeds(): MecanumDriveWheelSpeeds {
-        return MecanumDriveWheelSpeeds(frontLeftMotor.selectedSensorVelocity * Constants.wheelCircum, frontRightMotor.selectedSensorVelocity * Constants.wheelCircum,
-                backLeftMotor.selectedSensorVelocity * Constants.wheelCircum,  backRightMotor.selectedSensorVelocity * Constants.wheelCircum)
+        return MecanumDriveWheelSpeeds(frontLeftMotor.selectedSensorVelocity * (10.0/4096) * Constants.wheelCircum, frontRightMotor.selectedSensorVelocity  *(10.0/4096) * Constants.wheelCircum,
+                backLeftMotor.selectedSensorVelocity * (10.0/4096) * Constants.wheelCircum,  backRightMotor.selectedSensorVelocity * (10.0/4096) * Constants.wheelCircum)
+    }
+
+    fun getWheelAcc(): Double {
+        return gyro.rawAccelX.toDouble()
     }
 
     fun getM_Pose(): Pose2d {

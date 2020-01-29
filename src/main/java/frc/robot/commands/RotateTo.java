@@ -7,63 +7,51 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.RotationSubsystem;
-
 
 /**
  * An example command that uses an example subsystem.
  */
-public class RotateTo extends CommandBase {
+public class RotateTo extends PIDCommand {
+  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
-  private final RotationSubsystem m_rotationSubsystem;
-  private final DriveSubsystem m_driveSubsystem;
-  Double angle = 0.0;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * param subsystem The subsystem used by this command.
-   */
+/**
+ * Turns to robot to the specified angle.
+ *
+ * @param targetAngleDegrees The angle to turn to
+ * @param drive              The drive subsystem to use
+ */
+  public RotateTo(double targetAngleDegrees, DriveSubsystem drive) {
+    super(
+            new PIDController(Constants.tP, Constants.tI, Constants.tD),
 
-  //@TODO Add PID Values
-  public RotateTo(RotationSubsystem rotationSubsystem, DriveSubsystem driveSubsystem) {
-    m_rotationSubsystem = rotationSubsystem;
-    m_driveSubsystem = driveSubsystem;
+            // Close loop on heading
+            drive::getHeading,
 
+            // Set reference to target
+            targetAngleDegrees,
+            // Pipe output to turn robot
+            output -> drive.driveCartesanRobot(0.0, 0.0, output / 180.0),
+            // Require the drive
+            drive);
+
+
+    // Set the controller to be continuous (because it is an angle controller)
+    getController().enableContinuousInput(-180, 180);
+    // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
+    // setpoint before it is considered as having reached the reference
+    getController().setTolerance(5.0, 10.0);
 
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    m_rotationSubsystem.setSetpoint(angle);
-    m_rotationSubsystem.enable();
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    m_rotationSubsystem.disable();
-    if (interrupted) {
-      m_driveSubsystem.driveCartesan(0.0, 0.0, 0.0);
-    }
-  }
-
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_rotationSubsystem.getController().getPositionError() < 3;
+    // End when the controller is at the reference.
+    return getController().atSetpoint();
   }
 
-  public void setAngle(Double ang) {
-    ang = angle;
-  }
 }

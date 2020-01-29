@@ -32,6 +32,9 @@ object Constants {
     const val backLeftWheelPort =     3
     const val backRightWheelPort =    4
 
+    //Test
+    const val testPort = -1
+
     //Intake
     const val intakePort = -1
 
@@ -63,8 +66,10 @@ object Constants {
     //DATA
     const val isGyroReversed = false
     const val dt = 0.05
-    const val maxVel = 0.0
-    const val maxAcc = 0.0
+    const val maxVel = 2.8497620125792773
+    const val maxAcc = 1.3895263671875
+
+
     const val maxRotVel = 0.0
     const val maxRotAcc = 0.0
     const val maxRotDeg = 0.0
@@ -84,9 +89,9 @@ object Constants {
     const val yI = 0.0
     const val yD = 0.0
         //Rotation
-    const val tP = 0.0
+    const val tP = 5.0
     const val tI = 0.0
-    const val tD = 0.0
+    const val tD = 0.5
 
 
 }

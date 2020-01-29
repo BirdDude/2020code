@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.MecanumControllerCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
-import frc.robot.Logic.RoboMath
 import frc.robot.Logic.VisionComms
 import frc.robot.commands.DefaultDrive
 import frc.robot.commands.RotateTo
@@ -30,15 +29,13 @@ import java.util.function.Supplier
  */
 class RobotContainer {
     // The robot's subsystems and commands are defined here...
-    private val m_driveSubsystem = DriveSubsystem()
+//    private val m_driveSubsystem = DriveSubsystem()
     private val m_joystickSubsystem = JoystickSubsystem()
     private val m_xboxSubsystem = XboxSubsystem()
     private val m_LidarSubsystem = LidarSubsystem()
-    private val m_rotationSubsystem = RotationSubsystem(m_driveSubsystem)
 
 
-    private val m_defaultDrive = DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem)
-    private val m_rotateTo = RotateTo(m_rotationSubsystem, m_driveSubsystem)
+//    private val m_defaultDrive = DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem)
     private val joystick: Joystick
     private val m_visionComms = VisionComms(Constants.visionHost, Constants.visionPort)
 
@@ -49,13 +46,19 @@ class RobotContainer {
      * [edu.wpi.first.wpilibj2.command.button.JoystickButton].
      */
     private fun configureButtonBindings() {
-//        JoystickButton trigger = new JoystickButton(joystick, 1);  FOR FUTURE REFRENCE
-//        trigger.whenPressed(new DefaultDrive());
+
+        //Vision Testing
 
         JoystickButton(joystick, 11).whenPressed(Runnable { m_visionComms.startUp()  })
         JoystickButton(joystick, 12).whenPressed(Runnable { m_visionComms.shutDown() })
-
         JoystickButton(joystick, 1).whenPressed(Runnable { println("Variables: " + m_visionComms.retrieveData())})
+
+
+//        JoystickButton(joystick, 1).whenPressed(RotateTo((m_driveSubsystem.gyro.angle + 180.0) % 360, m_driveSubsystem).withTimeout(2.0))
+//        JoystickButton(joystick, 11).whenReleased(Runnable { m_driveSubsystem.gyro.reset() })
+
+//        JoystickButton(joystick, 3).whenPressed(Runnable { m_defaultDrive.end(true) }).whenPressed(goToVisionTarget())
+//        JoystickButton(joystick, 4).whenPressed(Runnable { goToVisionTarget().end(true) }).whenPressed(Runnable { if(!m_defaultDrive.isScheduled) m_defaultDrive.schedule() })
     }
 
 //    An ExampleCommand will run in autonomous
@@ -70,7 +73,7 @@ class RobotContainer {
 //
 //    }
 
-
+/*
     fun goToVisionTarget(): Command {
 
 
@@ -78,16 +81,26 @@ class RobotContainer {
         val startY = 0.0
         val startR = 0.0
 
+        val config = TrajectoryConfig(Constants.maxVel, Constants.maxAcc).setKinematics(m_driveSubsystem.kDriveKinematics).addConstraint(m_driveSubsystem.kDriveConstraints)
+
+
+/**  USING VISION TARGETING
         //Assuming looking straight at target
         val endX = RoboMath.targetX(m_driveSubsystem.getHeading(), m_LidarSubsystem.getLidar().getDistance().toDouble())
         val endY = RoboMath.targetY(m_driveSubsystem.getHeading(), m_LidarSubsystem.getLidar().getDistance().toDouble())
         val endR = -90.0
 
-            val config = TrajectoryConfig(Constants.maxVel, Constants.maxAcc).setKinematics(m_driveSubsystem.kDriveKinematics).addConstraint(m_driveSubsystem.kDriveConstraints)
 
             val exampleTrajectory = TrajectoryGenerator.generateTrajectory(
                     Pose2d(startX, startY, Rotation2d(startR)),
                     mutableListOf(), Pose2d(Translation2d(endX, endY), Rotation2d(endR)), config)
+
+        */
+
+
+        val exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+                Pose2d(startX, startY, Rotation2d(startR)),
+                mutableListOf(), Pose2d(Translation2d(3.0, 3.0), Rotation2d(0.0)), config)
 
             val command = MecanumControllerCommand(
                     exampleTrajectory,
@@ -102,10 +115,15 @@ class RobotContainer {
             )
             return command.andThen(Runnable { m_driveSubsystem.driveCartesan(0.0, 0.0, 0.0) })
         }
+        */
+
+
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
+
+
     init {
         joystick = m_joystickSubsystem.joystick
 
@@ -114,8 +132,10 @@ class RobotContainer {
 //        m_defaultDrive.initialize()
     }
 
-    fun getCartesianDrive():Command {
-        return m_defaultDrive
-    }
+//    fun getCartesianDrive():Command {
+//        return m_defaultDrive
+//    }
+
+
 
 }
