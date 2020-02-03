@@ -94,7 +94,7 @@ class DriveSubsystem : SubsystemBase() {
         if (Math.abs(trueY) <= 0.2) trueY = 0.0
         if (Math.abs(trueR) <= 0.5) trueR = 0.0
 
-        println("Rotation: " + rotation)
+//        println("Rotation: " + rotation)
 
         if(trueR > 0) mecanum.driveCartesian(trueX, -trueY, Math.pow(trueR, 2.0))
         else mecanum.driveCartesian(trueX, -trueY, Math.pow(trueR, 2.0)*-1)
@@ -126,6 +126,13 @@ class DriveSubsystem : SubsystemBase() {
     fun getHeading(): Double {
 //        return Math.IEEEremainder(gyro.getAngle(), 360.0) * if (Constants.isGyroReversed) -1.0 else 1.0
         return gyro.angle
+    }
+
+    fun setmManualWheelSpeeds(speed: MecanumDriveWheelSpeeds) {
+        frontLeftMotor.set(speed.frontLeftMetersPerSecond)
+        frontRightMotor.set(speed.frontRightMetersPerSecond)
+        backLeftMotor.set(speed.rearLeftMetersPerSecond)
+        backRightMotor.set(speed.rearRightMetersPerSecond)
     }
 
     fun getWheelSpeeds(): MecanumDriveWheelSpeeds {

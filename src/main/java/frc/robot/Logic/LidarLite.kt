@@ -7,7 +7,7 @@ import java.nio.ByteBuffer
 
 
 
-class LidarLite(port: I2C.Port) : PIDSource {
+class LidarLite(port: I2C.Port)  {
 
     private val k_deviceAddress: Byte = 0x62
 
@@ -30,7 +30,7 @@ class LidarLite(port: I2C.Port) : PIDSource {
     }
 
     fun getDistance(): Int {
-        return readShort(0x8f).toInt()
+        return (readShort(0x8f).toInt() / 2.54).toInt()
     }
 
     private fun writeRegister(address: Int, value: Int): Int {
@@ -47,18 +47,17 @@ class LidarLite(port: I2C.Port) : PIDSource {
         return m_buffer.getShort(0)
     }
 
-
-    override fun setPIDSourceType(pidSource: PIDSourceType) {
-        if (pidSource != PIDSourceType.kDisplacement) {
-            throw IllegalArgumentException("Only displacement is supported")
-        }
-    }
-
-    override fun getPIDSourceType(): PIDSourceType {
-        return PIDSourceType.kDisplacement
-    }
-
-    override fun pidGet(): Double {
-        return getDistance().toDouble()
-    }
+//    override fun setPIDSourceType(pidSource: PIDSourceType) {
+//        if (pidSource != PIDSourceType.kDisplacement) {
+//            throw IllegalArgumentException("Only displacement is supported")
+//        }
+//    }
+//
+//    override fun getPIDSourceType(): PIDSourceType {
+//        return PIDSourceType.kDisplacement
+//    }
+//
+//    override fun pidGet(): Double {
+//        return getDistance().toDouble()
+//    }
 }

@@ -7,7 +7,7 @@ import frc.robot.Logic.LidarLite
 
 class LidarSubsystem : SubsystemBase() {
 
-    val cheddar = LidarLite(I2C.Port.kOnboard)
+    val cheddar = LidarLite(I2C.Port.kMXP)
 
     override fun periodic() { // This method will be called once per scheduler run
 

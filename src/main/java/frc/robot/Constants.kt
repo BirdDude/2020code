@@ -32,6 +32,10 @@ object Constants {
     const val backLeftWheelPort =     3
     const val backRightWheelPort =    4
 
+    //Rotator
+    const val rotationActuatorPort =  0
+    const val rotatorPort = -1
+
     //Test
     const val testPort = -1
 
@@ -73,7 +77,6 @@ object Constants {
     const val maxRotVel = 0.0
     const val maxRotAcc = 0.0
     const val maxRotDeg = 0.0
-    const val maxWheelVel = 0.0
     const val startPosLong = 5.0
     const val startPosShort = 13.5
     const val sVolts = 0.0
@@ -81,11 +84,11 @@ object Constants {
 
     //PID
         //Horizontal Travel
-    const val xP = 0.0
+    const val xP = 1.0
     const val xI = 0.0
     const val xD = 0.0
         //Vertical Travel
-    const val yP = 0.0
+    const val yP = 1.0
     const val yI = 0.0
     const val yD = 0.0
         //Rotation

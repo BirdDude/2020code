@@ -2,6 +2,7 @@
 package frc.robot
 
 import edu.wpi.first.wpilibj.Joystick
+import edu.wpi.first.wpilibj.Servo
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController
 import edu.wpi.first.wpilibj.geometry.Pose2d
@@ -12,12 +13,13 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.MecanumControllerCommand
-import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
-import frc.robot.Logic.VisionComms
+import frc.robot.Logic.RoboMath
 import frc.robot.commands.DefaultDrive
+import frc.robot.commands.PathfindTo
 import frc.robot.commands.RotateTo
 import frc.robot.subsystems.*
+import java.nio.channels.Channel
 import java.util.function.Consumer
 import java.util.function.Supplier
 
@@ -29,15 +31,15 @@ import java.util.function.Supplier
  */
 class RobotContainer {
     // The robot's subsystems and commands are defined here...
-//    private val m_driveSubsystem = DriveSubsystem()
+    private val m_driveSubsystem = DriveSubsystem()
     private val m_joystickSubsystem = JoystickSubsystem()
     private val m_xboxSubsystem = XboxSubsystem()
     private val m_LidarSubsystem = LidarSubsystem()
+    private val m_visionSubsystem = VisionSubsystem()
 
 
-//    private val m_defaultDrive = DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem)
+    private val m_defaultDrive = DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem)
     private val joystick: Joystick
-    private val m_visionComms = VisionComms(Constants.visionHost, Constants.visionPort)
 
 
     /**
@@ -49,19 +51,17 @@ class RobotContainer {
 
         //Vision Testing
 
-        JoystickButton(joystick, 11).whenPressed(Runnable { m_visionComms.startUp()  })
-        JoystickButton(joystick, 12).whenPressed(Runnable { m_visionComms.shutDown() })
-        JoystickButton(joystick, 1).whenPressed(Runnable { println("Variables: " + m_visionComms.retrieveData())})
+//        JoystickButton(joystick, 1).whenPressed( Runnable { println(m_LidarSubsystem.getLidar().getDistance())})
 
-
-//        JoystickButton(joystick, 1).whenPressed(RotateTo((m_driveSubsystem.gyro.angle + 180.0) % 360, m_driveSubsystem).withTimeout(2.0))
+//        JoystickButton(joystick, 1).whenPressed(RotateTo((m_driveSubsystem.gyro.angle + 180.0) % 360, m_driveSubsystem, m_visionSubsystem).withTimeout(2.0)).whenReleased(m_defaultDrive)
 //        JoystickButton(joystick, 11).whenReleased(Runnable { m_driveSubsystem.gyro.reset() })
+
+        JoystickButton(joystick, 1).whenPressed(Runnable { PathfindTo(1.0, 1.0, 90.0, m_driveSubsystem) } )
 
 //        JoystickButton(joystick, 3).whenPressed(Runnable { m_defaultDrive.end(true) }).whenPressed(goToVisionTarget())
 //        JoystickButton(joystick, 4).whenPressed(Runnable { goToVisionTarget().end(true) }).whenPressed(Runnable { if(!m_defaultDrive.isScheduled) m_defaultDrive.schedule() })
     }
 
-//    An ExampleCommand will run in autonomous
 
     /**
      * Use this to pass the autonomous command to the main [Robot] class.
@@ -73,49 +73,6 @@ class RobotContainer {
 //
 //    }
 
-/*
-    fun goToVisionTarget(): Command {
-
-
-        val startX = 0.0
-        val startY = 0.0
-        val startR = 0.0
-
-        val config = TrajectoryConfig(Constants.maxVel, Constants.maxAcc).setKinematics(m_driveSubsystem.kDriveKinematics).addConstraint(m_driveSubsystem.kDriveConstraints)
-
-
-/**  USING VISION TARGETING
-        //Assuming looking straight at target
-        val endX = RoboMath.targetX(m_driveSubsystem.getHeading(), m_LidarSubsystem.getLidar().getDistance().toDouble())
-        val endY = RoboMath.targetY(m_driveSubsystem.getHeading(), m_LidarSubsystem.getLidar().getDistance().toDouble())
-        val endR = -90.0
-
-
-            val exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-                    Pose2d(startX, startY, Rotation2d(startR)),
-                    mutableListOf(), Pose2d(Translation2d(endX, endY), Rotation2d(endR)), config)
-
-        */
-
-
-        val exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-                Pose2d(startX, startY, Rotation2d(startR)),
-                mutableListOf(), Pose2d(Translation2d(3.0, 3.0), Rotation2d(0.0)), config)
-
-            val command = MecanumControllerCommand(
-                    exampleTrajectory,
-                    Supplier {m_driveSubsystem.m_pose},
-                    m_driveSubsystem.kDriveKinematics,
-                    PIDController(Constants.xP, Constants.xI, Constants.xD, Constants.dt),
-                    PIDController(Constants.yP, Constants.yI, Constants.yD, Constants.dt),
-                    ProfiledPIDController(Constants.tP, Constants.tI, Constants.tD, TrapezoidProfile.Constraints(Constants.maxRotVel, Constants.maxRotAcc), Constants.dt),
-                    Constants.maxWheelVel,
-                    Consumer { m_driveSubsystem.getWheelSpeeds() },
-                    m_driveSubsystem
-            )
-            return command.andThen(Runnable { m_driveSubsystem.driveCartesan(0.0, 0.0, 0.0) })
-        }
-        */
 
 
 
@@ -129,12 +86,12 @@ class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings()
-//        m_defaultDrive.initialize()
+        m_defaultDrive.initialize()
     }
 
-//    fun getCartesianDrive():Command {
-//        return m_defaultDrive
-//    }
+    fun getCartesianDrive():Command {
+        return m_defaultDrive
+    }
 
 
 

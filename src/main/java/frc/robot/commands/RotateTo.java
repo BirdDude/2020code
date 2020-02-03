@@ -10,7 +10,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants;
+import frc.robot.Logic.VisionComms;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 /**
  * An example command that uses an example subsystem.
@@ -25,12 +27,12 @@ public class RotateTo extends PIDCommand {
  * @param targetAngleDegrees The angle to turn to
  * @param drive              The drive subsystem to use
  */
-  public RotateTo(double targetAngleDegrees, DriveSubsystem drive) {
+  public RotateTo(double targetAngleDegrees, DriveSubsystem drive, VisionSubsystem vision) {
     super(
             new PIDController(Constants.tP, Constants.tI, Constants.tD),
 
             // Close loop on heading
-            drive::getHeading,
+            vision::getLoadingBearing,
 
             // Set reference to target
             targetAngleDegrees,

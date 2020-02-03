@@ -27,7 +27,7 @@ public class VisionComms {
     private Socket socket;
     private InputStream is;
     private OutputStream os;
-    private boolean active = false;
+    public boolean active = false;
     private static final byte[] GET_DATA_COMMAND = "DATA\n".getBytes();
     private static final byte[] STOP_COMMAND = "STOP\n".getBytes();
 
