@@ -36,6 +36,7 @@ class RobotContainer {
     private val m_xboxSubsystem = XboxSubsystem()
     private val m_LidarSubsystem = LidarSubsystem()
     private val m_visionSubsystem = VisionSubsystem()
+    private val m_rotatorSubsystem = SpinSubsystem()
 
 
     private val m_defaultDrive = DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem)
@@ -44,22 +45,24 @@ class RobotContainer {
 
     /**
      * Use this method to define your button->command mappings.  Buttons can be created by
-     * instantiating a [GenericHID] or one of its subclasses ([ ] or [XboxController]), and then passing it to a
+     * instantiating a GenericHID or one of its subclasses ([ ] or XboxController), and then passing it to a
      * [edu.wpi.first.wpilibj2.command.button.JoystickButton].
      */
     private fun configureButtonBindings() {
 
-        //Vision Testing
 
+
+        //Testing
 //        JoystickButton(joystick, 1).whenPressed( Runnable { println(m_LidarSubsystem.getLidar().getDistance())})
 
 //        JoystickButton(joystick, 1).whenPressed(RotateTo((m_driveSubsystem.gyro.angle + 180.0) % 360, m_driveSubsystem, m_visionSubsystem).withTimeout(2.0)).whenReleased(m_defaultDrive)
 //        JoystickButton(joystick, 11).whenReleased(Runnable { m_driveSubsystem.gyro.reset() })
 
-        JoystickButton(joystick, 1).whenPressed(Runnable { PathfindTo(1.0, 1.0, 90.0, m_driveSubsystem) } )
+//        JoystickButton(joystick, 1).whenPressed(Runnable { PathfindTo(1.0, 1.0, 90.0, m_driveSubsystem) } )
 
 //        JoystickButton(joystick, 3).whenPressed(Runnable { m_defaultDrive.end(true) }).whenPressed(goToVisionTarget())
 //        JoystickButton(joystick, 4).whenPressed(Runnable { goToVisionTarget().end(true) }).whenPressed(Runnable { if(!m_defaultDrive.isScheduled) m_defaultDrive.schedule() })
+
     }
 
 

@@ -2,44 +2,70 @@
 package frc.robot.subsystems
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
+import com.revrobotics.ColorMatch
 import com.revrobotics.ColorSensorV3
 import edu.wpi.first.wpilibj.I2C
 import edu.wpi.first.wpilibj.Servo
+import edu.wpi.first.wpilibj.util.Color
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
-import java.awt.Color
+
 
 class SpinSubsystem : SubsystemBase() {
 
     var rotationActuator = Servo(Constants.rotationActuatorPort)
-    var rotator = WPI_TalonSRX(Constants.rotatorPort)
+    var rotatorMotor = WPI_TalonSRX(Constants.rotatorPort)
     var colorSensor = ColorSensorV3(I2C.Port.kOnboard)
-    var color = colorSensor.color
+    private var color = colorSensor.color
+    private val m_colorMatcher = ColorMatch()
+    private val kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429)
+    private val kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240)
+    private val kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114)
+    private val kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113)
+
 
     override fun periodic() {
         // This method will be called once per scheduler run
-        updateColor()
+
     }
 
     fun moveActuatorIn() { rotationActuator.position = 0.17 }
     fun moveActuatorOut() { rotationActuator.position = 0.82 }
 
-    fun isRed(): Boolean    { return (color.red/255 > 0.8) && (color.green/255 < 0.3) && (color.blue/255 < 0.3) }
-    fun isGreen(): Boolean  { return (color.red/255 < 0.3) && (color.green/255 > 0.8) && (color.blue/255 < 0.3) }
-    fun isBlue(): Boolean   { return (color.red/255 < 0.3) && (color.green/255 < 0.3) && (color.blue/255 > 0.8) }
-    fun isYellow(): Boolean { return (color.red/255 > 0.8) && (color.green/255 > 0.8) && (color.blue/255 < 0.3) }
-
-    fun updateColor() {
+    fun getColor(): Color {
         color = colorSensor.color
+        return color
     }
 
+    fun getNearestColor(): String {
+        color = colorSensor.color
+
+        val match = m_colorMatcher.matchClosestColor(color)
+
+        if (match.color === kBlueTarget) {
+            return "Blue"
+        } else if (match.color === kRedTarget) {
+            return "Red"
+        } else if (match.color === kGreenTarget) {
+            return "Green"
+        } else if (match.color === kYellowTarget) {
+            return "Yellow"
+        } else {
+            return "Unknown"
+        }
+    }
 
 
     /**
      * Creates a new ExampleSubsystem.
      */
     init {
-        rotationActuator.setBounds(2.0, 1.8, 1.5, 1.2, 1.0);
+        rotationActuator.setBounds(2.0, 1.8, 1.5, 1.2, 1.0)
+
+        m_colorMatcher.addColorMatch(kBlueTarget)
+        m_colorMatcher.addColorMatch(kGreenTarget)
+        m_colorMatcher.addColorMatch(kRedTarget)
+        m_colorMatcher.addColorMatch(kYellowTarget)
 
     }
 }
