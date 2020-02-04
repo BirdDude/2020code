@@ -45,7 +45,6 @@ class RobotContainer {
 
     private val m_defaultDrive = DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem)
     private val joystick: Joystick
-    private val m_camera = CameraServer.getInstance().startAutomaticCapture()
 
 
 
@@ -96,12 +95,6 @@ class RobotContainer {
         // Configure the button bindings
         configureButtonBindings()
         m_defaultDrive.initialize()
-
-        m_camera.setFPS(30)
-        m_camera.setExposureManual(15)
-        m_camera.setResolution(480, 270)
-//        m_camera.setWhiteBalanceManual(4000)
-        m_camera.setPixelFormat(VideoMode.PixelFormat.kMJPEG)
 
     }
 
