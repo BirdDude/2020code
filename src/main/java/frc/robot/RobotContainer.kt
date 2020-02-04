@@ -1,6 +1,9 @@
 /*----------------------------------------------------------------------------*/ /* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */ /* Open Source Software - may be modified and shared by FRC teams. The code   */ /* must be accompanied by the FIRST BSD license file in the root directory of */ /* the project.                                                               */ /*----------------------------------------------------------------------------*/
 package frc.robot
 
+import edu.wpi.cscore.CameraServerJNI
+import edu.wpi.cscore.VideoMode
+import edu.wpi.first.cameraserver.CameraServer
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.Servo
 import edu.wpi.first.wpilibj.controller.PIDController
@@ -25,7 +28,8 @@ import java.util.function.Supplier
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the [Robot]
+ * "declarative" paradigm, very little robot logic should actually be handled in the [
+ * Robot]
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
@@ -41,11 +45,13 @@ class RobotContainer {
 
     private val m_defaultDrive = DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem)
     private val joystick: Joystick
+    private val m_camera = CameraServer.getInstance().startAutomaticCapture()
+
 
 
     /**
      * Use this method to define your button->command mappings.  Buttons can be created by
-     * instantiating a GenericHID or one of its subclasses ([ ] or XboxController), and then passing it to a
+     * instantiating a GenericHID or one of its subclasses, and then passing it to a
      * [edu.wpi.first.wpilibj2.command.button.JoystickButton].
      */
     private fun configureButtonBindings() {
@@ -90,6 +96,13 @@ class RobotContainer {
         // Configure the button bindings
         configureButtonBindings()
         m_defaultDrive.initialize()
+
+        m_camera.setFPS(30)
+        m_camera.setExposureManual(15)
+        m_camera.setResolution(480, 270)
+//        m_camera.setWhiteBalanceManual(4000)
+        m_camera.setPixelFormat(VideoMode.PixelFormat.kMJPEG)
+
     }
 
     fun getCartesianDrive():Command {
