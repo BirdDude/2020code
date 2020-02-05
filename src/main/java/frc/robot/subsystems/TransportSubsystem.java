@@ -8,13 +8,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class TransportSubsystem extends SubsystemBase {
-  
-  TalonSRX storage = new TalonSRX(Constants.transportPort);
+
+  WPI_TalonSRX m_storage = new WPI_TalonSRX(Constants.transportPort);
 
   public TransportSubsystem() {
 
@@ -26,6 +26,6 @@ public class TransportSubsystem extends SubsystemBase {
   }
 
   void loadBall() {
-    storage.set(ControlMode.PercentOutput, Constants.transportPower)
+    m_storage.set(Constants.transportSpeed);
   }
 }

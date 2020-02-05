@@ -7,15 +7,16 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class IntakeSubsystem extends SubsystemBase {
-  
-  TalonSRX intake = new TalonSRX(Constants.intakePort);
-  TalonSRX intakeDeploy = new TalonSRX(Constants.intakeDeployPort);
+
+  WPI_TalonSRX m_intake = new WPI_TalonSRX(Constants.intakePort);
+  WPI_TalonSRX m_intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployPort);
 
   public IntakeSubsystem() {
 
@@ -26,11 +27,10 @@ public class IntakeSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  void deployIntake() {
-
-  }
 
   void runIntake() {
-    intake.set(ControlMode.PercentOutput, Constants.intakePower);
+    m_intake.set(Constants.intakePower);
   }
+
+
 }

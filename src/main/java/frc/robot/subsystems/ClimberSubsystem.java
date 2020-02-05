@@ -7,16 +7,16 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class ClimberSubsystem extends SubsystemBase {
- 
-  TanlonSRX rotor = new TalonSRX(Constants.climbRotor);
-  TanlonSRX winch = new TalonSRX(Constants.climbWinch);
+
+  WPI_TalonSRX m_rotor = new WPI_TalonSRX(Constants.climbRotorPort);
+  WPI_TalonSRX m_winch = new WPI_TalonSRX(Constants.climbWinchPort);
 
   public ClimberSubsystem() {
 
@@ -25,17 +25,6 @@ public class ClimberSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-  }
 
-  void climb() {
-    winch.set(ControlMode.PercentOutput, Constants.climbWinchPower);
-  }
-
-  void extend() {
-    rotor.set(ControlMode.PercentOutput, Constants.climbRotorPower);
-  }
-
-  void retract() {
-    rotor.set(ControlMode.PercentOutput, -Constants.climbRotorPower);
   }
 }

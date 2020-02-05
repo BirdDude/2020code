@@ -36,28 +36,25 @@ object Constants {
     const val rotationActuatorPort =  0
     const val rotatorPort = -1
 
-    //Test
-    const val testPort = -1
 
     //Intake
     const val intakePort = -1
     const val intakeDeployPort = -1
     const val intakePower = 0.50;
 
+
     //Shooter
     const val shooterPort = -1
-    const val shooterPower = 0.40;
+    const val maxShooterRPM = -1.0
 
     //Transport
     const val transportPort = -1
-    const val transportWheelPort = -1
-    const val transportPower = -1
+    const val transportSpeed = 0.0
 
     //Climb
-    const val climbRotor = -1
-    const val climbWinch = -1
-    const val climbRotorPower = 0.50
-    const val climbWinchPower = 0.50
+    const val climbRotorPort = -1
+    const val climbWinchPort = -1
+
 
     //Control Panel
 //    const val

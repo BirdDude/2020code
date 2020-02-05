@@ -7,14 +7,14 @@
 
 package frc.robot.subsystems;
 
-import frc.robot.Constants
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class ShooterSubsystem extends SubsystemBase {
-  
-  TalonSRX flyWheel = new TalonSRX(Constants.shooterPort);
+
+  WPI_TalonSRX m_flyWheel = new WPI_TalonSRX(Constants.shooterPort);
 
   public ShooterSubsystem() {
 
@@ -25,14 +25,8 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  void startFlywheel() {
-    flyWheel.set(ControlMode.PercentOutput, Constants.shooterPower);
-  }
-  void startFlywheel(double power) {
-    flyWheel.set(ControlMode.PercentOutput, power);
+  void setFlyWheel(double power) {
+    m_flyWheel.set(power);
   }
 
-  void stopFlyWheel () {
-    flyWheel.set(ControlMode.PercentOutput, 0.0);
-  }
 }
