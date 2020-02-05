@@ -41,17 +41,23 @@ object Constants {
 
     //Intake
     const val intakePort = -1
+    const val intakeDeployPort = -1
+    const val intakePower = 0.50;
 
     //Shooter
     const val shooterPort = -1
+    const val shooterPower = 0.40;
 
     //Transport
     const val transportPort = -1
     const val transportWheelPort = -1
+    const val transportPower = -1
 
     //Climb
     const val climbRotor = -1
-    const val clumbWinch = -1
+    const val climbWinch = -1
+    const val climbRotorPower = 0.50
+    const val climbWinchPower = 0.50
 
     //Control Panel
 //    const val
