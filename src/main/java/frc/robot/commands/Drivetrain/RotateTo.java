@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.Drivetrain;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
@@ -21,12 +21,12 @@ public class RotateTo extends PIDCommand {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
 
-/**
- * Turns to robot to the specified angle.
- *
- * @param targetAngleDegrees The angle to turn to
- * @param drive              The drive subsystem to use
- */
+
+  // Turns to robot to the specified angle.
+  //
+  // @param targetAngleDegrees The angle to turn to
+  // @param drive              The drive subsystem to use
+  //
   public RotateTo(double targetAngleDegrees, DriveSubsystem drive, VisionSubsystem vision) {
     super(
             new PIDController(Constants.tP, Constants.tI, Constants.tD),

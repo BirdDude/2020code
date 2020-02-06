@@ -1,30 +1,13 @@
 /*----------------------------------------------------------------------------*/ /* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */ /* Open Source Software - may be modified and shared by FRC teams. The code   */ /* must be accompanied by the FIRST BSD license file in the root directory of */ /* the project.                                                               */ /*----------------------------------------------------------------------------*/
 package frc.robot
 
-import edu.wpi.cscore.CameraServerJNI
-import edu.wpi.cscore.VideoMode
-import edu.wpi.first.cameraserver.CameraServer
 import edu.wpi.first.wpilibj.Joystick
-import edu.wpi.first.wpilibj.Servo
-import edu.wpi.first.wpilibj.controller.PIDController
-import edu.wpi.first.wpilibj.controller.ProfiledPIDController
-import edu.wpi.first.wpilibj.geometry.Pose2d
-import edu.wpi.first.wpilibj.geometry.Rotation2d
-import edu.wpi.first.wpilibj.geometry.Translation2d
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.MecanumControllerCommand
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
-import frc.robot.Logic.RoboMath
-import frc.robot.commands.DefaultDrive
-import frc.robot.commands.PathfindTo
-import frc.robot.commands.RotateTo
+import frc.robot.commands.ColorWheel.ExtendActuator
+import frc.robot.commands.ColorWheel.RetractActuator
+import frc.robot.commands.Drivetrain.DefaultDrive
 import frc.robot.subsystems.*
-import java.nio.channels.Channel
-import java.util.function.Consumer
-import java.util.function.Supplier
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -55,9 +38,22 @@ class RobotContainer {
      */
     private fun configureButtonBindings() {
 
+        var is11Active = false
+
 
 
         //Testing
+
+        JoystickButton(joystick, 11).whenPressed(Runnable {
+            if (is11Active) {
+                is11Active = false
+                ExtendActuator(m_rotatorSubsystem)
+            } else {
+                is11Active = true
+                RetractActuator(m_rotatorSubsystem)
+            }
+        })
+
 //        JoystickButton(joystick, 1).whenPressed( Runnable { println(m_LidarSubsystem.getLidar().getDistance())})
 
 //        JoystickButton(joystick, 1).whenPressed(RotateTo((m_driveSubsystem.gyro.angle + 180.0) % 360, m_driveSubsystem, m_visionSubsystem).withTimeout(2.0)).whenReleased(m_defaultDrive)
