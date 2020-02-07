@@ -26,17 +26,12 @@ class DefaultDrive(private val m_DriveSubsystem: DriveSubsystem, private val m_j
     var maxAcc = 0.0
     var end = false
 
-    init {
-        // Use addRequirements() here to declare subsyste m dependencies.
-        addRequirements(m_DriveSubsystem)
-    }
+    init { addRequirements(m_DriveSubsystem) }
 
-    // Called when the command is initially scheduled.
     override fun initialize() {
         end = false
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
     override fun execute() {
 
         maxVel = Math.max(m_DriveSubsystem.getWheelSpeeds().frontLeftMetersPerSecond, maxVel)
@@ -49,7 +44,6 @@ class DefaultDrive(private val m_DriveSubsystem: DriveSubsystem, private val m_j
 //        m_DriveSubsystem.driveCartesan(m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getY(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kRight))
     }
 
-    // Called once the command ends or is interrupted.
     override fun end(interrupted: Boolean) {
         m_DriveSubsystem.driveCartesan(0.0, 0.0, 0.0)
         end = false

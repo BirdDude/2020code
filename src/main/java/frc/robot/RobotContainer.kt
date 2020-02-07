@@ -17,15 +17,19 @@ import frc.robot.subsystems.*
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 class RobotContainer {
-    // The robot's subsystems and commands are defined here...
+
+    /** Subsystems*/
     private val m_driveSubsystem = DriveSubsystem()
     private val m_joystickSubsystem = JoystickSubsystem()
     private val m_xboxSubsystem = XboxSubsystem()
+
     private val m_LidarSubsystem = LidarSubsystem()
     private val m_visionSubsystem = VisionSubsystem()
     private val m_rotatorSubsystem = SpinSubsystem()
 
+    private val m_climberSubsystem = ClimberSubsystem()
 
+    /**Commands */
     private val m_defaultDrive = DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem)
     private val joystick: Joystick
 
@@ -38,24 +42,31 @@ class RobotContainer {
      */
     private fun configureButtonBindings() {
 
-        var is11Active = false
 
 
 
-        //Testing
 
-        JoystickButton(joystick, 11).whenPressed(Runnable {
-            if (is11Active) {
-                is11Active = false
-                ExtendActuator(m_rotatorSubsystem)
-            } else {
-                is11Active = true
-                RetractActuator(m_rotatorSubsystem)
-            }
-        })
+        //Winch climber
+        JoystickButton(joystick, 12).whenPressed(Runnable { m_climberSubsystem.m_winch.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_winch.set(0.0) })
+
+//        ColorWheel extending system
+//        var is11Active = false
+//        JoystickButton(joystick, -1).whenPressed(Runnable {
+//            if (is11Active) {
+//                is11Active = false
+//                ExtendActuator(m_rotatorSubsystem)
+//            } else {
+//                is11Active = true
+//                RetractActuator(m_rotatorSubsystem)
+//            }
+//        })
+
+
+        /** Testing */
+
+        JoystickButton(joystick, 1).whenReleased(Runnable { m_climberSubsystem.m_rotor.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_rotor.set(0.0) })
 
 //        JoystickButton(joystick, 1).whenPressed( Runnable { println(m_LidarSubsystem.getLidar().getDistance())})
-
 //        JoystickButton(joystick, 1).whenPressed(RotateTo((m_driveSubsystem.gyro.angle + 180.0) % 360, m_driveSubsystem, m_visionSubsystem).withTimeout(2.0)).whenReleased(m_defaultDrive)
 //        JoystickButton(joystick, 11).whenReleased(Runnable { m_driveSubsystem.gyro.reset() })
 

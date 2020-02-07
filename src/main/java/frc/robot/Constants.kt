@@ -32,7 +32,7 @@ object Constants {
     const val backLeftWheelPort =     3
     const val backRightWheelPort =    4
 
-    //Rotator
+    //Control Panel
     const val rotationActuatorPort =  0
     const val rotatorPort = -1
 
@@ -40,7 +40,7 @@ object Constants {
     //Intake
     const val intakePort = -1
     const val intakeDeployPort = -1
-    const val intakePower = 0.50;
+    const val intakePower = 0.50
 
 
     //Shooter
@@ -51,13 +51,10 @@ object Constants {
     const val transportPort = -1
     const val transportSpeed = 0.0
 
-    //Climb
+    //Climber
     const val climbRotorPort = -1
     const val climbWinchPort = -1
 
-
-    //Control Panel
-//    const val
 
     /**Inputs */
     //Controllers
@@ -82,8 +79,6 @@ object Constants {
     const val maxRotDeg = 0.0
     const val startPosLong = 5.0
     const val startPosShort = 13.5
-    const val sVolts = 0.0
-    const val vVolts = 0.0
 
     //PID
         //Horizontal Travel
@@ -94,7 +89,7 @@ object Constants {
     const val yP = 1.0
     const val yI = 0.0
     const val yD = 0.0
-        //Rotation
+        //Rotation (Configured)
     const val tP = 5.0
     const val tI = 0.0
     const val tD = 0.5

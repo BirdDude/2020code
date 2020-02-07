@@ -24,10 +24,7 @@ class SpinSubsystem : SubsystemBase() {
     private val kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113)
 
 
-    override fun periodic() {
-        // This method will be called once per scheduler run
-
-    }
+    override fun periodic() { }
 
     fun moveActuatorIn() { rotationActuator.position = 0.17 }
     fun moveActuatorOut() { rotationActuator.position = 0.82 }

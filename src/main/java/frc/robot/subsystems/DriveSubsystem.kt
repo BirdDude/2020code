@@ -113,9 +113,7 @@ class DriveSubsystem : SubsystemBase() {
 
 
     override fun periodic() {
-        // This method will be called once per scheduler run
 
-        /** Re-add when Added Encoders */
         speed = { MecanumDriveWheelSpeeds(frontLeftMotor.selectedSensorVelocity * Constants.wheelCircum, frontRightMotor.selectedSensorVelocity * Constants.wheelCircum,
                                         backLeftMotor.selectedSensorVelocity * Constants.wheelCircum,  backRightMotor.selectedSensorVelocity * Constants.wheelCircum) }
 

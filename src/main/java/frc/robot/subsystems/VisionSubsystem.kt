@@ -12,7 +12,7 @@ class VisionSubsystem : SubsystemBase() {
     var powerPortBearing = 0.0
 
 
-    override fun periodic() { // This method will be called once per scheduler run
+    override fun periodic() {
         if (m_visionComms.active) {
             if (m_visionComms.retrieveData()["lbrb"] != null) loadingBearing = m_visionComms.retrieveData()["lbrb"]!!
             if (m_visionComms.retrieveData()["pprb"] != null) powerPortBearing = m_visionComms.retrieveData()["pprb"]!!

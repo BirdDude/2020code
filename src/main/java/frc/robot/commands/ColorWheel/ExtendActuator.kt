@@ -2,21 +2,17 @@
 package frc.robot.commands.ColorWheel
 
 import edu.wpi.first.wpilibj2.command.CommandBase
+import edu.wpi.first.wpilibj2.command.InstantCommand
 import frc.robot.ExampleClasses.ExampleSubsystem
 import frc.robot.subsystems.SpinSubsystem
 
 /**
  * An example command that uses an example subsystem.
  */
-class ExtendActuator(private val m_spinSubsystem: SpinSubsystem) : CommandBase() {
-    // Called when the command is initially scheduled.
+class ExtendActuator(private val m_spinSubsystem: SpinSubsystem) : InstantCommand() {
+
     override fun initialize() {
         m_spinSubsystem.moveActuatorOut()
-    }
-
-    // Returns true when the command should end.
-    override fun isFinished(): Boolean {
-        return true
     }
 
     /**
@@ -25,7 +21,6 @@ class ExtendActuator(private val m_spinSubsystem: SpinSubsystem) : CommandBase()
      * param subsystem The subsystem used by this command.
      */
     init {
-        // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(m_spinSubsystem)
     }
 }

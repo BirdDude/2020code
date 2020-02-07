@@ -15,16 +15,13 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 public class ClimberSubsystem extends SubsystemBase {
 
-  WPI_TalonSRX m_rotor = new WPI_TalonSRX(Constants.climbRotorPort);
-  WPI_TalonSRX m_winch = new WPI_TalonSRX(Constants.climbWinchPort);
+  public WPI_TalonSRX m_rotor = new WPI_TalonSRX(Constants.climbRotorPort);
+  public WPI_TalonSRX m_winch = new WPI_TalonSRX(Constants.climbWinchPort);
 
   public ClimberSubsystem() {
 
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-
-  }
+  public void periodic() { }
 }

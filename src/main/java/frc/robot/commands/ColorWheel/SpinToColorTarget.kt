@@ -9,7 +9,6 @@ import frc.robot.subsystems.SpinSubsystem
  * An example command that uses an example subsystem.
  */
 class SpinToColorTarget(val m_SpinSubsystem: SpinSubsystem, var m_colorTarget: String) : CommandBase() {
-    // Called when the command is initially scheduled.
 
     var spinPos = true
     var currentPos = m_SpinSubsystem.getNearestColor()
@@ -21,7 +20,6 @@ class SpinToColorTarget(val m_SpinSubsystem: SpinSubsystem, var m_colorTarget: S
         else if (currentPos.equals("Yellow") && m_colorTarget.equals("Red")) spinPos = true
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
     override fun execute() {
         if (spinPos) {
             m_SpinSubsystem.rotatorMotor.set(0.5)
@@ -30,12 +28,10 @@ class SpinToColorTarget(val m_SpinSubsystem: SpinSubsystem, var m_colorTarget: S
         }
     }
 
-    // Called once the command ends or is interrupted.
     override fun end(interrupted: Boolean) {
         m_SpinSubsystem.rotatorMotor.set(0.0)
     }
 
-    // Returns true when the command should end.
     override fun isFinished(): Boolean {
         return m_SpinSubsystem.getNearestColor().equals(m_colorTarget)
     }
@@ -45,8 +41,5 @@ class SpinToColorTarget(val m_SpinSubsystem: SpinSubsystem, var m_colorTarget: S
      *
      * param subsystem The subsystem used by this command.
      */
-    init {
-        // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(m_SpinSubsystem)
-    }
+    init { addRequirements(m_SpinSubsystem) }
 }

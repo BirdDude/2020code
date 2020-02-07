@@ -9,9 +9,7 @@ class LidarSubsystem : SubsystemBase() {
 
     val cheddar = LidarLite(I2C.Port.kMXP)
 
-    override fun periodic() { // This method will be called once per scheduler run
-
-    }
+    override fun periodic() { }
 
     fun getLidar(): LidarLite {
         return cheddar

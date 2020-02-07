@@ -15,7 +15,5 @@ class XboxSubsystem : SubsystemBase() {
         xboxController = XboxController(xboxPort)
     }
 
-    override fun periodic() { // This method will be called once per scheduler run
-
-    }
+    override fun periodic() { }
 }
