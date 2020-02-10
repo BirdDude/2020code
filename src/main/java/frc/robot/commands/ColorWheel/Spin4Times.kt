@@ -8,35 +8,32 @@ import frc.robot.subsystems.SpinSubsystem
 /**
  * An example command that uses an example subsystem.
  */
-class SpinToColorTarget(val m_SpinSubsystem: SpinSubsystem, var m_colorTarget: String) : CommandBase() {
+class Spin4Times(val m_spinSubsystem: SpinSubsystem, var m_colorTarget: String) : CommandBase() {
 
-    var spinPos = true
-    var currentPos = m_SpinSubsystem.getNearestColor()
+    var lastPos = m_spinSubsystem.getNearestColor()
+
+    var count = 0
 
     override fun initialize() {
         println("Starting to Spin!")
-        if (currentPos.equals("Blue") && m_colorTarget.equals("Yellow")) spinPos = true
-        else if (currentPos.equals("Green") && m_colorTarget.equals("Blue")) spinPos = true
-        else if (currentPos.equals("Red") && m_colorTarget.equals("Green")) spinPos = true
-        else if (currentPos.equals("Yellow") && m_colorTarget.equals("Red")) spinPos = true
-
-        if (spinPos) {
-            m_SpinSubsystem.rotatorMotor.set(0.66)
-        } else {
-            m_SpinSubsystem.rotatorMotor.set(-0.66)
-        }
+        count = 0
+        m_spinSubsystem.rotatorMotor.set(0.66)
     }
 
     override fun execute() {
+        if (!m_spinSubsystem.getNearestColor().equals(lastPos)) {
+            count++
+        }
+        lastPos = m_spinSubsystem.getNearestColor()
     }
 
     override fun end(interrupted: Boolean) {
-        m_SpinSubsystem.rotatorMotor.set(0.0)
+        m_spinSubsystem.rotatorMotor.set(0.0)
         println("Done Spinning!")
     }
 
     override fun isFinished(): Boolean {
-        return m_SpinSubsystem.getNearestColor().equals(m_colorTarget)
+        return (count > 32)
     }
 
     /**
@@ -44,5 +41,5 @@ class SpinToColorTarget(val m_SpinSubsystem: SpinSubsystem, var m_colorTarget: S
      *
      * param subsystem The subsystem used by this command.
      */
-    init { addRequirements(m_SpinSubsystem) }
+    init { addRequirements(m_spinSubsystem) }
 }

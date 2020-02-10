@@ -14,9 +14,14 @@ class VisionSubsystem : SubsystemBase() {
 
     override fun periodic() {
         if (m_visionComms.active) {
-            if (m_visionComms.retrieveData()["lbrb"] != null) loadingBearing = m_visionComms.retrieveData()["lbrb"]!!
-            if (m_visionComms.retrieveData()["pprb"] != null) powerPortBearing = m_visionComms.retrieveData()["pprb"]!!
+            try {
+                if (m_visionComms.retrieveData()["pprb"] != null) powerPortBearing = m_visionComms.retrieveData()["pprb"]!!
+            } catch (e: Exception) { powerPortBearing = 0.0}
+            try {
+                if (m_visionComms.retrieveData()["lbrb"] != null) loadingBearing = m_visionComms.retrieveData()["lbrb"]!!
+            } catch (e: Exception) { loadingBearing = 0.0 }
         }
+
     }
 
 

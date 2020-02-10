@@ -2,6 +2,7 @@
 package frc.robot.subsystems
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX
 import com.revrobotics.ColorMatch
 import com.revrobotics.ColorSensorV3
 import edu.wpi.first.wpilibj.I2C
@@ -14,7 +15,7 @@ import frc.robot.Constants
 class SpinSubsystem : SubsystemBase() {
 
     var rotationActuator = Servo(Constants.rotationActuatorPort)
-    var rotatorMotor = WPI_TalonSRX(Constants.rotatorPort)
+    var rotatorMotor = WPI_VictorSPX(Constants.rotatorPort)
     var colorSensor = ColorSensorV3(I2C.Port.kOnboard)
     private var color = colorSensor.color
     private val m_colorMatcher = ColorMatch()
@@ -22,6 +23,7 @@ class SpinSubsystem : SubsystemBase() {
     private val kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240)
     private val kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114)
     private val kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113)
+    private val kTestTarget = ColorMatch.makeColor(1.0,1.0,1.0 )
 
 
     override fun periodic() { }
@@ -39,16 +41,22 @@ class SpinSubsystem : SubsystemBase() {
 
         val match = m_colorMatcher.matchClosestColor(color)
 
-        if (match.color === kBlueTarget) {
-            return "Blue"
-        } else if (match.color === kRedTarget) {
-            return "Red"
-        } else if (match.color === kGreenTarget) {
-            return "Green"
-        } else if (match.color === kYellowTarget) {
-            return "Yellow"
-        } else {
-            return "Unknown"
+        when {
+            match.color === kBlueTarget -> {
+                return "Blue"
+            }
+            match.color === kRedTarget -> {
+                return "Red"
+            }
+            match.color === kGreenTarget -> {
+                return "Green"
+            }
+            match.color === kYellowTarget -> {
+                return "Yellow"
+            }
+            else -> {
+                return "Unknown"
+            }
         }
     }
 

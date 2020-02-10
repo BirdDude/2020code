@@ -156,8 +156,8 @@ public class VisionComms {
             lastChar = thisChar;
 //            System.out.println(binaryData);
         }
-        System.out.println(binaryData);
-        // had no data
+
+
         if ( binaryData.size() == 0 ) {
 //			System.out.println("Vision has no data.");
             return new HashMap<String,Double>();
@@ -171,7 +171,7 @@ public class VisionComms {
         LineNumberReader reader = new LineNumberReader(new StringReader(data));
         String line = null;
         while ((line = reader.readLine()) != null) {
-			System.out.println("Vision has read line " + line);
+//			System.out.println("Vision has read line " + line);
             int index = line.indexOf("=");
             if (index == -1) {
                 continue;

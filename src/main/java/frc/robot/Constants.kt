@@ -34,7 +34,7 @@ object Constants {
 
     //Control Panel
     const val rotationActuatorPort =  0
-    const val rotatorPort = -1
+    const val rotatorPort = 6
 
 
     //Intake
@@ -52,7 +52,7 @@ object Constants {
     const val transportSpeed = 0.0
 
     //Climber
-    const val climbRotorPort = -1
+    const val climbLifterPort = 13
     const val climbWinchPort = -1
 
 
