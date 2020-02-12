@@ -67,6 +67,8 @@ class SpinSubsystem : SubsystemBase() {
     init {
         rotationActuator.setBounds(2.0, 1.8, 1.5, 1.2, 1.0)
 
+        moveActuatorIn()
+        rotationActuator
         m_colorMatcher.addColorMatch(kBlueTarget)
         m_colorMatcher.addColorMatch(kGreenTarget)
         m_colorMatcher.addColorMatch(kRedTarget)

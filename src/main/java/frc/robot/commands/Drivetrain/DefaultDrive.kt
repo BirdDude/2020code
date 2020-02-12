@@ -39,7 +39,7 @@ class DefaultDrive(private val m_DriveSubsystem: DriveSubsystem, private val m_j
 
         //FLIGHTSTICK
         m_DriveSubsystem.driveCartesan(m_joystickSubsystem.joystick.x, m_joystickSubsystem.joystick.y, m_joystickSubsystem.joystick.twist)
-
+        println(m_joystickSubsystem.joystick.twist)
         //XBOX
 //        m_DriveSubsystem.driveCartesan(m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getY(GenericHID.Hand.kLeft), m_xboxSubsystem.xboxController.getX(GenericHID.Hand.kRight))
     }

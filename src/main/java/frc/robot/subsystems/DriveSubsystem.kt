@@ -52,6 +52,8 @@ class DriveSubsystem : SubsystemBase() {
     var backRightPos = Translation2d(0.381, -0.381)
     var backLeftPos = Translation2d(-0.381, -0.381)
     var kDriveKinematics = MecanumDriveKinematics(frontLeftPos, frontRightPos, backLeftPos, backRightPos)
+    var maxSpeed = 0.0
+
     var kDriveConstraints = MecanumDriveKinematicsConstraint(kDriveKinematics, Constants.maxVel)
 
 
@@ -65,7 +67,7 @@ class DriveSubsystem : SubsystemBase() {
     lateinit var speed: () -> MecanumDriveWheelSpeeds
 
     init {
-        //Just me here, huh?
+        gyro.reset()
     }
 
 
@@ -114,23 +116,28 @@ class DriveSubsystem : SubsystemBase() {
 
     override fun periodic() {
 
-        speed = { MecanumDriveWheelSpeeds(frontLeftMotor.selectedSensorVelocity * Constants.wheelCircum, frontRightMotor.selectedSensorVelocity * Constants.wheelCircum,
-                                        backLeftMotor.selectedSensorVelocity * Constants.wheelCircum,  backRightMotor.selectedSensorVelocity * Constants.wheelCircum) }
+        speed = { MecanumDriveWheelSpeeds(frontLeftMotor.selectedSensorVelocity * (10.0/4096) * Constants.wheelCircum, frontRightMotor.selectedSensorVelocity * (10.0/4096) * Constants.wheelCircum,
+                                        backLeftMotor.selectedSensorVelocity * (10.0/4096) * Constants.wheelCircum,  backRightMotor.selectedSensorVelocity * (10.0/4096) * Constants.wheelCircum) }
 
 
         m_pose = m_odometry.update(Rotation2d.fromDegrees(getHeading()), speed.invoke())
+
+        maxSpeed = Math.max(speed.invoke().frontLeftMetersPerSecond, maxSpeed)
+        println(maxSpeed)
     }
 
     fun getHeading(): Double {
-//        return Math.IEEEremainder(gyro.getAngle(), 360.0) * if (Constants.isGyroReversed) -1.0 else 1.0
         return gyro.angle
     }
 
     fun setmManualWheelSpeeds(speed: MecanumDriveWheelSpeeds) {
-        frontLeftMotor.set(speed.frontLeftMetersPerSecond)
-        frontRightMotor.set(speed.frontRightMetersPerSecond)
-        backLeftMotor.set(speed.rearLeftMetersPerSecond)
-        backRightMotor.set(speed.rearRightMetersPerSecond)
+        speed.normalize(Constants.maxVel)
+
+        println(speed.toString())
+        frontLeftMotor.set(speed.frontLeftMetersPerSecond / Constants.maxVel)
+        frontRightMotor.set(speed.frontRightMetersPerSecond / Constants.maxVel)
+        backLeftMotor.set(speed.rearLeftMetersPerSecond / Constants.maxVel)
+        backRightMotor.set(speed.rearRightMetersPerSecond / Constants.maxVel)
     }
 
     fun getWheelSpeeds(): MecanumDriveWheelSpeeds {
@@ -142,7 +149,7 @@ class DriveSubsystem : SubsystemBase() {
         return gyro.rawAccelX.toDouble()
     }
 
-    fun getM_Pose(): Pose2d {
-        return m_pose
+    fun getMPose(): Pose2d {
+        return m_odometry.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds())
     }
 }

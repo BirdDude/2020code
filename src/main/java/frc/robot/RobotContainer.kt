@@ -4,11 +4,7 @@ package frc.robot
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
-import frc.robot.commands.ColorWheel.ExtendActuator
-import frc.robot.commands.ColorWheel.RetractActuator
-import frc.robot.commands.ColorWheel.SpinToColorTarget
 import frc.robot.commands.Drivetrain.DefaultDrive
-import frc.robot.commands.Drivetrain.PathfindTo
 import frc.robot.subsystems.*
 
 /**
@@ -27,9 +23,9 @@ class RobotContainer {
 
 //    private val m_LidarSubsystem = LidarSubsystem()
     private val m_visionSubsystem = VisionSubsystem()
-    private val m_rotatorSubsystem = SpinSubsystem()
+//    private val m_controlPanelSubsystem = SpinSubsystem()
 
-    private val m_climberSubsystem = ClimberSubsystem()
+//    private val m_climberSubsystem = ClimberSubsystem()
 
     /**Commands */
     private val m_defaultDrive = DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem)
@@ -68,6 +64,8 @@ class RobotContainer {
 //        JoystickButton(joystick, 1).whenPressed(Runnable { println("PP Bearing: " + m_visionSubsystem.powerPortBearing + "\nLB Bearing: " + m_visionSubsystem.loadingBearing) })
 //        JoystickButton(joystick, 11).whenPressed(SpinToColorTarget(m_rotatorSubsystem, "Blue"))
 
+//        JoystickButton(joystick, 11).whenPressed(ExtendActuator(m_controlPanelSubsystem)).whenReleased(RetractActuator(m_controlPanelSubsystem))
+
 //        JoystickButton(joystick, 7).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
 //        JoystickButton(joystick, 9).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
 //        JoystickButton(joystick, 11).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(-0.3) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
@@ -78,7 +76,7 @@ class RobotContainer {
 //        JoystickButton(joystick, 1).whenPressed(RotateTo((m_driveSubsystem.gyro.angle + 180.0) % 360, m_driveSubsystem, m_visionSubsystem).withTimeout(2.0)).whenReleased(m_defaultDrive)
 //        JoystickButton(joystick, 11).whenReleased(Runnable { m_driveSubsystem.gyro.reset() })
 
-        JoystickButton(joystick, 1).whenPressed(Runnable { PathfindTo(1.0, 1.0, 90.0, m_driveSubsystem) } )
+//        JoystickButton(joystick, 1).whenPressed( )
 
 //        JoystickButton(joystick, 3).whenPressed(Runnable { m_defaultDrive.end(true) }).whenPressed(goToVisionTarget())
 //        JoystickButton(joystick, 4).whenPressed(Runnable { goToVisionTarget().end(true) }).whenPressed(Runnable { if(!m_defaultDrive.isScheduled) m_defaultDrive.schedule() })
