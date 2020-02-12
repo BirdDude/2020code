@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.kinematics.MecanumDriveWheelSpeeds
 import edu.wpi.first.wpilibj.trajectory.Trajectory
 import edu.wpi.first.wpilibj.trajectory.constraint.MecanumDriveKinematicsConstraint
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.MecanumControllerCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
 
@@ -132,7 +133,7 @@ class DriveSubsystem : SubsystemBase() {
         return gyro.angle
     }
 
-    fun setmManualWheelSpeeds(speed: MecanumDriveWheelSpeeds) {
+    fun setManualWheelSpeeds(speed: MecanumDriveWheelSpeeds) {
         speed.normalize(Constants.forwardMaxVel)
 
 //        println(speed.toString())
@@ -154,8 +155,4 @@ class DriveSubsystem : SubsystemBase() {
     fun getMPose(): Pose2d {
         return m_odometry.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds())
     }
-
-//    fun pathfindTo(trajectory: Trajectory): Command {
-//
-//    }
 }

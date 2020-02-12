@@ -3,6 +3,12 @@ package frc.robot
 
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.MecanumControllerCommand
+import edu.wpi.first.wpilibj.kinematics.MecanumDriveWheelSpeeds
+import edu.wpi.first.wpilibj.trajectory.Trajectory
+import edu.wpi.first.wpilibj.controller.PIDController
+import edu.wpi.first.wpilibj.geometry.Pose2d
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
 import frc.robot.commands.Drivetrain.DefaultDrive
 import frc.robot.commands.Drivetrain.DefaultDrivePID
@@ -117,6 +123,19 @@ class RobotContainer {
         return m_defaultDrive
     }
 
+    fun generatePathfindingCommand(trajectory: Trajectory): Command {
+        var command = MecanumControllerCommand(
+            trajectory,
+            Supplier<Pose2d> {m_driveSubsystem.getMPose()},
+            m_driveSubsystem.kDriveKinematics,
+            PIDController(Constants.xP, Constants.xI, Constants.xD),
+            PIDController(Constants.yP, Constants.yI, Constants.yD),
+            ProfiledPIDController(Constants.tP, Constants.tI, Constants.tD, TrapezoidProfile.Constraints(Constants.maxRotVel, Constants.maxRotAcc)),
+            Constants.forwardMaxVel,
+            Consumer<MecanumDriveWheelSpeeds> {m_driveSubsystem.setManualWheelSpeeds()},
+            m_driveSubsystem
+            )
 
-
+         return command
+    }
 }

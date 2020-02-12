@@ -77,7 +77,8 @@ object Constants {
     const val sidewaysMaxAcc = 0.50286865234375
 
 
-    const val maxRotVel = 15.808104515075684 //test
+    const val maxRotVel: Double = 15.808104515075684 //test
+    const val maxRotAcc : Double = -1.0//test
 
     const val startPosLong = 5.0
     const val startPosShort = 13.5
@@ -92,9 +93,9 @@ object Constants {
     const val yI = 0.0
     const val yD = 0.0
         //Rotation (Configured)
-    const val tP = 5.0
-    const val tI = 0.0
-    const val tD = 0.5
+    const val tP : Double = 5.0
+    const val tI : Double = 0.0
+    const val tD : Double = 0.5
 
 
 }
