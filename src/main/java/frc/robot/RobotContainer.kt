@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
 import frc.robot.commands.Drivetrain.DefaultDrive
+import frc.robot.commands.Drivetrain.DefaultDrivePID
 import frc.robot.subsystems.*
 
 /**
@@ -25,9 +26,10 @@ class RobotContainer {
     private val m_visionSubsystem = VisionSubsystem()
 //    private val m_controlPanelSubsystem = SpinSubsystem()
 
-//    private val m_climberSubsystem = ClimberSubsystem()
+    private val m_climberSubsystem = ClimberSubsystem()
 
     /**Commands */
+//    private val m_defaultDrive = DefaultDrivePID(m_joystickSubsystem, m_driveSubsystem)
     private val m_defaultDrive = DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem)
     private val joystick: Joystick
 
@@ -40,9 +42,12 @@ class RobotContainer {
      */
     private fun configureButtonBindings() {
 
-
         //Winch climber
-//        JoystickButton(joystick, 12).whenPressed(Runnable { m_climberSubsystem.m_winch.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_winch.set(0.0) })
+        JoystickButton(joystick, 12).whenPressed(Runnable { m_climberSubsystem.m_winch.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_winch.set(0.0) })
+        JoystickButton(joystick, 7).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
+        JoystickButton(joystick, 11).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(-0.3) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
+
+
 
 //        ColorWheel extending system
 //        var is11Active = false
@@ -66,9 +71,6 @@ class RobotContainer {
 
 //        JoystickButton(joystick, 11).whenPressed(ExtendActuator(m_controlPanelSubsystem)).whenReleased(RetractActuator(m_controlPanelSubsystem))
 
-//        JoystickButton(joystick, 7).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
-//        JoystickButton(joystick, 9).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
-//        JoystickButton(joystick, 11).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(-0.3) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
 
 //        JoystickButton(joystick, 1).whenReleased(Runnable { m_climberSubsystem.m_rotor.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_rotor.set(0.0) })
 

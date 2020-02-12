@@ -28,7 +28,9 @@ import edu.wpi.first.wpilibj.interfaces.Accelerometer
 import edu.wpi.first.wpilibj.kinematics.MecanumDriveKinematics
 import edu.wpi.first.wpilibj.kinematics.MecanumDriveOdometry
 import edu.wpi.first.wpilibj.kinematics.MecanumDriveWheelSpeeds
+import edu.wpi.first.wpilibj.trajectory.Trajectory
 import edu.wpi.first.wpilibj.trajectory.constraint.MecanumDriveKinematicsConstraint
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
 
@@ -54,7 +56,7 @@ class DriveSubsystem : SubsystemBase() {
     var kDriveKinematics = MecanumDriveKinematics(frontLeftPos, frontRightPos, backLeftPos, backRightPos)
     var maxSpeed = 0.0
 
-    var kDriveConstraints = MecanumDriveKinematicsConstraint(kDriveKinematics, Constants.maxVel)
+    var kDriveConstraints = MecanumDriveKinematicsConstraint(kDriveKinematics, Constants.forwardMaxVel)
 
 
     //Gyro Init
@@ -123,7 +125,7 @@ class DriveSubsystem : SubsystemBase() {
         m_pose = m_odometry.update(Rotation2d.fromDegrees(getHeading()), speed.invoke())
 
         maxSpeed = Math.max(speed.invoke().frontLeftMetersPerSecond, maxSpeed)
-        println(maxSpeed)
+//        println(maxSpeed)
     }
 
     fun getHeading(): Double {
@@ -131,13 +133,13 @@ class DriveSubsystem : SubsystemBase() {
     }
 
     fun setmManualWheelSpeeds(speed: MecanumDriveWheelSpeeds) {
-        speed.normalize(Constants.maxVel)
+        speed.normalize(Constants.forwardMaxVel)
 
-        println(speed.toString())
-        frontLeftMotor.set(speed.frontLeftMetersPerSecond / Constants.maxVel)
-        frontRightMotor.set(speed.frontRightMetersPerSecond / Constants.maxVel)
-        backLeftMotor.set(speed.rearLeftMetersPerSecond / Constants.maxVel)
-        backRightMotor.set(speed.rearRightMetersPerSecond / Constants.maxVel)
+//        println(speed.toString())
+        frontLeftMotor.set(speed.frontLeftMetersPerSecond / Constants.forwardMaxVel)
+        frontRightMotor.set(speed.frontRightMetersPerSecond / Constants.forwardMaxVel)
+        backLeftMotor.set(speed.rearLeftMetersPerSecond / Constants.forwardMaxVel)
+        backRightMotor.set(speed.rearRightMetersPerSecond / Constants.forwardMaxVel)
     }
 
     fun getWheelSpeeds(): MecanumDriveWheelSpeeds {
@@ -152,4 +154,8 @@ class DriveSubsystem : SubsystemBase() {
     fun getMPose(): Pose2d {
         return m_odometry.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds())
     }
+
+//    fun pathfindTo(trajectory: Trajectory): Command {
+//
+//    }
 }

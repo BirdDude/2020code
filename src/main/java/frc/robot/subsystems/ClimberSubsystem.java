@@ -17,7 +17,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 public class ClimberSubsystem extends SubsystemBase {
 
   public WPI_VictorSPX m_lifter = new WPI_VictorSPX(Constants.climbLifterPort);
-  public WPI_TalonSRX m_winch = new WPI_TalonSRX(Constants.climbWinchPort);
+  public WPI_VictorSPX m_winch = new WPI_VictorSPX(Constants.climbWinchPort);
 
   public ClimberSubsystem() {
 

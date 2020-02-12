@@ -53,7 +53,7 @@ object Constants {
 
     //Climber
     const val climbLifterPort = 13
-    const val climbWinchPort = -1
+    const val climbWinchPort = 12
 
 
     /**Inputs */
@@ -73,12 +73,11 @@ object Constants {
 
     const val forwardMaxVel = 2.8497620125792773
     const val forwardMaxAcc = 1.3895263671875
-    const val sidewaysMaxVel = 0.0
-    const val sidewaysMaxAcc = 0.0
+    const val sidewaysMaxVel = 1.8056451416015625
+    const val sidewaysMaxAcc = 0.50286865234375
 
 
-    const val maxRotVel = 2.8497620125792773 //test
-    const val maxRotAcc = 1.3895263671875 //test
+    const val maxRotVel = 15.808104515075684 //test
 
     const val startPosLong = 5.0
     const val startPosShort = 13.5
