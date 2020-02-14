@@ -14,11 +14,13 @@ class VisionSubsystem : SubsystemBase() {
 
     override fun periodic() {
         if (m_visionComms.active) {
+            val commsData = m_visionComms.retrieveData()
+            
             try {
-                if (m_visionComms.retrieveData()["pprb"] != null) powerPortBearing = m_visionComms.retrieveData()["pprb"]!!
+                if (commsData["pprb"] != null) powerPortBearing = commsData["pprb"]!!
             } catch (e: Exception) { powerPortBearing = 0.0}
             try {
-                if (m_visionComms.retrieveData()["lbrb"] != null) loadingBearing = m_visionComms.retrieveData()["lbrb"]!!
+                if (commsData["lbrb"] != null) loadingBearing = commsData["lbrb"]!!
             } catch (e: Exception) { loadingBearing = 0.0 }
         }
 

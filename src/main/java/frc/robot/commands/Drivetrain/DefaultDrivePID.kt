@@ -1,14 +1,10 @@
 /*----------------------------------------------------------------------------*/ /* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */ /* Open Source Software - may be modified and shared by FRC teams. The code   */ /* must be accompanied by the FIRST BSD license file in the root directory of */ /* the project.                                                               */ /*----------------------------------------------------------------------------*/
 package frc.robot.commands.Drivetrain
 
-import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.controller.PIDController
-import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj2.command.CommandBase
-import edu.wpi.first.wpilibj2.command.PIDSubsystem
 import frc.robot.Constants
-import frc.robot.ExampleClasses.ExampleSubsystem
 import frc.robot.subsystems.DriveSubsystem
 import frc.robot.subsystems.JoystickSubsystem
 
@@ -31,17 +27,26 @@ class DefaultDrivePID(joy: JoystickSubsystem, drive: DriveSubsystem) : CommandBa
     var yNum = 0.0
     var tNum = 0.0
 
-    fun JoyX(): Double {
-        if (Math.abs(joystick.x) > 0.2) return joystick.x
-        else return 0.0
+    private fun joyX(): Double {
+        return if (Math.abs(joystick.x) > 0.2) joystick.x
+        else {
+            PIDX.reset()
+            0.0
+        }
     }
-    fun JoyY(): Double  {
-        if (Math.abs(joystick.y) > 0.2) return joystick.y
-        else return 0.0
+    private fun joyY(): Double  {
+        return if (Math.abs(joystick.y) > 0.2) joystick.y
+        else {
+            PIDY.reset()
+            0.0
+        }
     }
-    fun JoyT(): Double {
-        if (Math.abs(joystick.twist) > 0.2) return joystick.twist
-        else return 0.0
+    private fun joyT(): Double {
+        return if (Math.abs(joystick.twist) > 0.2) joystick.twist
+        else {
+            PIDT.reset()
+            0.0
+        }
     }
 
 
@@ -49,38 +54,32 @@ class DefaultDrivePID(joy: JoystickSubsystem, drive: DriveSubsystem) : CommandBa
     init {
         joystick = joy.joystick
         m_driveSubsystem = drive
-        updateSpeed()
         addRequirements(m_driveSubsystem)
 
-//        PIDX.setIntegratorRange(-1.0, 1.0)
-//        PIDY.setIntegratorRange(-1.0, 1.0)
-//        PIDT.setIntegratorRange(-1.0, 1.0)
         PIDT.enableContinuousInput(-180.0, 180.0)
+
+        PIDX.setTolerance(0.1)
+        PIDY.setTolerance(0.1)
+        PIDT.setTolerance(0.1)
+
     }
 
     override fun initialize() {
         end = false
-    }
-
-    override fun execute() {
-        updateSpeed()
 
         PIDX.setpoint = joystick.x
         PIDY.setpoint = joystick.y
         PIDT.setpoint = joystick.twist
+    }
 
+    override fun execute() {
 
-
-        xNum = -1 * PIDX.calculate(m_driveSubsystem.gyro.velocityX / Constants.forwardMaxVel, JoyX())
-        yNum = -1 * PIDY.calculate(m_driveSubsystem.gyro.velocityY / Constants.sidewaysMaxVel, JoyY())
-        tNum = -1 * PIDT.calculate(m_driveSubsystem.gyro.rawGyroZ.toDouble() / Constants.maxRotVel, JoyT())
-
-        if (Math.abs(xNum) < 0.2) xNum = 0.0
-        if (Math.abs(yNum) < 0.2) yNum = 0.0
-        if (Math.abs(tNum) < 0.2) tNum = 0.0
+        xNum = -1 * PIDX.calculate(m_driveSubsystem.gyro.velocityX / Constants.forwardMaxVel, joyX())
+        yNum = -1 * PIDY.calculate(m_driveSubsystem.gyro.velocityY / Constants.sidewaysMaxVel, joyY())
+        tNum = -1 * PIDT.calculate(m_driveSubsystem.gyro.rawGyroZ.toDouble() / Constants.maxRotVel, joyT())
 
         m_driveSubsystem.driveCartesan(xNum, yNum, tNum)
-        println("Target: " + m_driveSubsystem.gyro.velocityX / Constants.forwardMaxVel + " X Out: " + xNum + "\nTarget " + m_driveSubsystem.gyro.velocityY / Constants.sidewaysMaxVel + " Y Out: " + yNum + "\nTarget: " +  JoyT() + " T Out: " + tNum)
+        println("Target: " + m_driveSubsystem.gyro.velocityX / Constants.forwardMaxVel + " X Out: " + xNum + "\nTarget " + m_driveSubsystem.gyro.velocityY / Constants.sidewaysMaxVel + " Y Out: " + yNum + "\nTarget: " +  tNum + " T Out: " + tNum)
     }
 
     override fun end(interrupted: Boolean) {
@@ -89,10 +88,6 @@ class DefaultDrivePID(joy: JoystickSubsystem, drive: DriveSubsystem) : CommandBa
 
     override fun isFinished(): Boolean {
         return end
-    }
-
-    private fun updateSpeed() {
-        speed = ChassisSpeeds(m_driveSubsystem.gyro.velocityX.toDouble(), m_driveSubsystem.gyro.velocityY.toDouble(), degToRad(m_driveSubsystem.getHeading()))
     }
 
     private fun degToRad(ang: Double): Double {

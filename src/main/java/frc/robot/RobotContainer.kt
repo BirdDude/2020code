@@ -7,12 +7,14 @@ import edu.wpi.first.wpilibj2.command.MecanumControllerCommand
 import edu.wpi.first.wpilibj.kinematics.MecanumDriveWheelSpeeds
 import edu.wpi.first.wpilibj.trajectory.Trajectory
 import edu.wpi.first.wpilibj.controller.PIDController
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
 import frc.robot.commands.Drivetrain.DefaultDrive
 import frc.robot.commands.Drivetrain.DefaultDrivePID
 import frc.robot.subsystems.*
+
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -27,6 +29,7 @@ class RobotContainer {
     private val m_driveSubsystem = DriveSubsystem()
     private val m_joystickSubsystem = JoystickSubsystem()
     private val m_xboxSubsystem = XboxSubsystem()
+    private val m_intakeSubsystem = IntakeSubsystem()
 
 //    private val m_LidarSubsystem = LidarSubsystem()
     private val m_visionSubsystem = VisionSubsystem()
@@ -49,10 +52,13 @@ class RobotContainer {
     private fun configureButtonBindings() {
 
         //Winch climber
-        JoystickButton(joystick, 12).whenPressed(Runnable { m_climberSubsystem.m_winch.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_winch.set(0.0) })
-        JoystickButton(joystick, 7).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
-        JoystickButton(joystick, 11).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(-0.3) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
+//        JoystickButton(joystick, 12).whenPressed(Runnable { m_climberSubsystem.m_winch.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_winch.set(0.0) })
+//        JoystickButton(joystick, 7).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
+//        JoystickButton(joystick, 11).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(-0.7) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
 
+        //Intake
+        JoystickButton(joystick, 1).whenPressed(Runnable { m_intakeSubsystem.m_intake.set(1.0) }).whenReleased(Runnable { m_intakeSubsystem.m_intake.set(0.0) })
+        JoystickButton(joystick, 9).whenPressed(Runnable { m_intakeSubsystem.m_intakeDeploy.set(0.1) }).whenReleased(Runnable { m_intakeSubsystem.m_intakeDeploy.set(0.0) })
 
 
 //        ColorWheel extending system
@@ -122,7 +128,7 @@ class RobotContainer {
     fun getCartesianDrive():Command {
         return m_defaultDrive
     }
-
+/**
     fun generatePathfindingCommand(trajectory: Trajectory): Command {
         var command = MecanumControllerCommand(
             trajectory,
@@ -132,10 +138,11 @@ class RobotContainer {
             PIDController(Constants.yP, Constants.yI, Constants.yD),
             ProfiledPIDController(Constants.tP, Constants.tI, Constants.tD, TrapezoidProfile.Constraints(Constants.maxRotVel, Constants.maxRotAcc)),
             Constants.forwardMaxVel,
-            Consumer<MecanumDriveWheelSpeeds> {m_driveSubsystem.setManualWheelSpeeds()},
+            Consumer<MecanumDriveWheelSpeeds> { m_driveSubsystem.setManualWheelSpeeds(MecanumDriveWheelSpeeds)},
             m_driveSubsystem
             )
 
          return command
     }
+    */
 }
