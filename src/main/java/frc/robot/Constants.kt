@@ -38,9 +38,8 @@ object Constants {
 
 
     //Intake
-    const val intakePort = -1
-    const val intakeDeployPort = -1
-    const val intakePower = 0.50
+    const val intakeDeployPort = 6
+    const val intakePort = 7
 
 
     //Shooter

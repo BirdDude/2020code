@@ -29,13 +29,13 @@ class RobotContainer {
     private val m_driveSubsystem = DriveSubsystem()
     private val m_joystickSubsystem = JoystickSubsystem()
     private val m_xboxSubsystem = XboxSubsystem()
-    private val m_intakeSubsystem = IntakeSubsystem()
+//    private val m_intakeSubsystem = IntakeSubsystem()
 
 //    private val m_LidarSubsystem = LidarSubsystem()
-    private val m_visionSubsystem = VisionSubsystem()
+//    private val m_visionSubsystem = VisionSubsystem()
 //    private val m_controlPanelSubsystem = SpinSubsystem()
 
-    private val m_climberSubsystem = ClimberSubsystem()
+//    private val m_climberSubsystem = ClimberSubsystem()
 
     /**Commands */
 //    private val m_defaultDrive = DefaultDrivePID(m_joystickSubsystem, m_driveSubsystem)
@@ -51,14 +51,24 @@ class RobotContainer {
      */
     private fun configureButtonBindings() {
 
-        //Winch climber
+        //Winch
 //        JoystickButton(joystick, 12).whenPressed(Runnable { m_climberSubsystem.m_winch.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_winch.set(0.0) })
-//        JoystickButton(joystick, 7).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
-//        JoystickButton(joystick, 11).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(-0.7) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
+
+        //Climber
+//        JoystickButton(joystick, 4).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
+//        JoystickButton(joystick, 6).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(-0.7) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
 
         //Intake
-        JoystickButton(joystick, 1).whenPressed(Runnable { m_intakeSubsystem.m_intake.set(1.0) }).whenReleased(Runnable { m_intakeSubsystem.m_intake.set(0.0) })
-        JoystickButton(joystick, 9).whenPressed(Runnable { m_intakeSubsystem.m_intakeDeploy.set(0.1) }).whenReleased(Runnable { m_intakeSubsystem.m_intakeDeploy.set(0.0) })
+//        JoystickButton(joystick, 1).whenPressed(Runnable { m_intakeSubsystem.m_intake.set(0.2) }).whenReleased(Runnable { m_intakeSubsystem.m_intake.set(0.0) })
+
+//        JoystickButton(joystick, 2).whenPressed(Runnable { m_intakeSubsystem.m_intakeDeploy.set(1.0) }).whenReleased(Runnable { m_intakeSubsystem.m_intakeDeploy.set(0.0) })
+//          JoystickButton(joystick, 3).whenPressed(Runnable {
+//              while(true) {
+//                  m_intakeSubsystem.m_intakeDeploy.set(joystick.throttle * 0.6)
+//              }
+//          }).whenReleased(Runnable {
+//              m_intakeSubsystem.m_intakeDeploy.set(0.0)
+//          })
 
 
 //        ColorWheel extending system

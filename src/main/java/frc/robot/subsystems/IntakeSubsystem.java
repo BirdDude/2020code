@@ -16,8 +16,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-  public WPI_TalonSRX m_intake = new WPI_TalonSRX(Constants.intakePort);
-  public WPI_VictorSPX m_intakeDeploy = new WPI_VictorSPX(Constants.intakeDeployPort);
+  public WPI_TalonSRX m_intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployPort);
+  public WPI_VictorSPX m_intake = new WPI_VictorSPX(Constants.intakePort);
 
   public IntakeSubsystem() {
 
