@@ -2,18 +2,15 @@
 package frc.robot
 
 import edu.wpi.first.wpilibj.Joystick
-import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.MecanumControllerCommand
-import edu.wpi.first.wpilibj.kinematics.MecanumDriveWheelSpeeds
-import edu.wpi.first.wpilibj.trajectory.Trajectory
-import edu.wpi.first.wpilibj.controller.PIDController
-import edu.wpi.first.wpilibj.controller.ProfiledPIDController
-import edu.wpi.first.wpilibj.geometry.Pose2d
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
+import edu.wpi.first.wpilibj2.command.*
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
 import frc.robot.commands.Drivetrain.DefaultDrive
-import frc.robot.commands.Drivetrain.DefaultDrivePID
 import frc.robot.subsystems.*
+import frc.robot.commands.Climber.Lifter
+import frc.robot.commands.Climber.Winch
+import frc.robot.commands.ColorWheel.Actuator
+import frc.robot.commands.PowerCells.Intake
+import frc.robot.commands.PowerCells.RotateIntakeBarTo
 
 
 /**
@@ -26,20 +23,27 @@ import frc.robot.subsystems.*
 class RobotContainer {
 
     /** Subsystems*/
-    private val m_driveSubsystem = DriveSubsystem()
     private val m_joystickSubsystem = JoystickSubsystem()
     private val m_xboxSubsystem = XboxSubsystem()
-//    private val m_intakeSubsystem = IntakeSubsystem()
 
-//    private val m_LidarSubsystem = LidarSubsystem()
-//    private val m_visionSubsystem = VisionSubsystem()
+
+    private val m_driveSubsystem = DriveSubsystem()
+    private val m_intakeSubsystem = IntakeSubsystem()
 //    private val m_controlPanelSubsystem = SpinSubsystem()
-
-//    private val m_climberSubsystem = ClimberSubsystem()
+    private val m_climberSubsystem = ClimberSubsystem()
+//    private val m_LidarSubsystem = LidarSubsystem()
+    private val m_visionSubsystem = VisionSubsystem()
 
     /**Commands */
 //    private val m_defaultDrive = DefaultDrivePID(m_joystickSubsystem, m_driveSubsystem)
     private val m_defaultDrive = DefaultDrive(m_driveSubsystem, m_joystickSubsystem, m_xboxSubsystem)
+
+    private val Lifter = Lifter(m_climberSubsystem)
+    private val Winch = Winch(m_climberSubsystem)
+//    private val Actuator = Actuator(m_controlPanelSubsystem )
+    private val Intake = Intake(m_intakeSubsystem)
+
+
     private val joystick: Joystick
 
 
@@ -51,24 +55,16 @@ class RobotContainer {
      */
     private fun configureButtonBindings() {
 
-        //Winch
-//        JoystickButton(joystick, 12).whenPressed(Runnable { m_climberSubsystem.m_winch.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_winch.set(0.0) })
+//        Winch
+//        JoystickButton(joystick, 12).whenPressed(Winch.Run()).whenReleased(Winch.Stop())
 
-        //Climber
-//        JoystickButton(joystick, 4).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
-//        JoystickButton(joystick, 6).whenPressed(Runnable { m_climberSubsystem.m_lifter.set(-0.7) }).whenReleased(Runnable { m_climberSubsystem.m_lifter.set(0.0) })
+//        Climber
+//        JoystickButton(joystick, 4).whenPressed(Lifter.Raise()).whenReleased(Lifter.Stop())
+//        JoystickButton(joystick, 6).whenPressed(Lifter.Lower()).whenReleased(Lifter.Stop())
 
         //Intake
-//        JoystickButton(joystick, 1).whenPressed(Runnable { m_intakeSubsystem.m_intake.set(0.2) }).whenReleased(Runnable { m_intakeSubsystem.m_intake.set(0.0) })
-
-//        JoystickButton(joystick, 2).whenPressed(Runnable { m_intakeSubsystem.m_intakeDeploy.set(1.0) }).whenReleased(Runnable { m_intakeSubsystem.m_intakeDeploy.set(0.0) })
-//          JoystickButton(joystick, 3).whenPressed(Runnable {
-//              while(true) {
-//                  m_intakeSubsystem.m_intakeDeploy.set(joystick.throttle * 0.6)
-//              }
-//          }).whenReleased(Runnable {
-//              m_intakeSubsystem.m_intakeDeploy.set(0.0)
-//          })
+        JoystickButton(joystick, 2).whenPressed(RotateIntakeBarTo(Constants.downPosEncoderTicks, m_intakeSubsystem).andThen(Intake.Run()))
+                .whenReleased(Intake.Stop().andThen(RotateIntakeBarTo(0.0, m_intakeSubsystem)))
 
 
 //        ColorWheel extending system
@@ -94,16 +90,8 @@ class RobotContainer {
 //        JoystickButton(joystick, 11).whenPressed(ExtendActuator(m_controlPanelSubsystem)).whenReleased(RetractActuator(m_controlPanelSubsystem))
 
 
-//        JoystickButton(joystick, 1).whenReleased(Runnable { m_climberSubsystem.m_rotor.set(0.3) }).whenReleased(Runnable { m_climberSubsystem.m_rotor.set(0.0) })
 
 //        JoystickButton(joystick, 1).whenPressed( Runnable { println(m_LidarSubsystem.getLidar().getDistance())})
-//        JoystickButton(joystick, 1).whenPressed(RotateTo((m_driveSubsystem.gyro.angle + 180.0) % 360, m_driveSubsystem, m_visionSubsystem).withTimeout(2.0)).whenReleased(m_defaultDrive)
-//        JoystickButton(joystick, 11).whenReleased(Runnable { m_driveSubsystem.gyro.reset() })
-
-//        JoystickButton(joystick, 1).whenPressed( )
-
-//        JoystickButton(joystick, 3).whenPressed(Runnable { m_defaultDrive.end(true) }).whenPressed(goToVisionTarget())
-//        JoystickButton(joystick, 4).whenPressed(Runnable { goToVisionTarget().end(true) }).whenPressed(Runnable { if(!m_defaultDrive.isScheduled) m_defaultDrive.schedule() })
 
     }
 
@@ -127,32 +115,34 @@ class RobotContainer {
 
 
     init {
+
+        //Jetson Bootup
+//        BootJetson().schedule()
+
         joystick = m_joystickSubsystem.joystick
 
+
         // Configure the button bindings
+
         configureButtonBindings()
-        m_defaultDrive.initialize()
+//        m_defaultDrive.initialize()
 
     }
 
-    fun getCartesianDrive():Command {
-        return m_defaultDrive
-    }
+//    fun getCartesianDrive():Command {
+//        return m_defaultDrive
+//    }
+
 /**
     fun generatePathfindingCommand(trajectory: Trajectory): Command {
         var command = MecanumControllerCommand(
-            trajectory,
-            Supplier<Pose2d> {m_driveSubsystem.getMPose()},
-            m_driveSubsystem.kDriveKinematics,
-            PIDController(Constants.xP, Constants.xI, Constants.xD),
-            PIDController(Constants.yP, Constants.yI, Constants.yD),
-            ProfiledPIDController(Constants.tP, Constants.tI, Constants.tD, TrapezoidProfile.Constraints(Constants.maxRotVel, Constants.maxRotAcc)),
-            Constants.forwardMaxVel,
-            Consumer<MecanumDriveWheelSpeeds> { m_driveSubsystem.setManualWheelSpeeds(MecanumDriveWheelSpeeds)},
-            m_driveSubsystem
-            )
+                trajectory,
+                Supplier { m_driveSubsystem.getMPose() },
+                SimpleMotorFeedforward(0.0, 0.0, 0.0)
+        )
 
-         return command
+        return command
     }
-    */
+ */
+
 }

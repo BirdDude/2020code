@@ -18,13 +18,23 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public WPI_TalonSRX m_intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployPort);
   public WPI_VictorSPX m_intake = new WPI_VictorSPX(Constants.intakePort);
+  public WPI_VictorSPX m_innerIntake = new WPI_VictorSPX(Constants.insideIntakePort);
+
+  public int intakeEncoderTicks = 0;
 
   public IntakeSubsystem() {
+    m_intakeDeploy.setSelectedSensorPosition(0);
+    m_intakeDeploy.setSensorPhase(false);
+  }
 
+  public Integer getDeployTicks() {
+    return intakeEncoderTicks;
   }
 
   @Override
-  public void periodic() { }
+  public void periodic() {
+    intakeEncoderTicks = m_intakeDeploy.getSelectedSensorPosition();
+  }
 
 
 }

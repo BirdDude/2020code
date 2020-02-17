@@ -40,6 +40,8 @@ object Constants {
     //Intake
     const val intakeDeployPort = 6
     const val intakePort = 7
+    const val insideIntakePort = -1
+    const val downPosEncoderTicks = 945.0
 
 
     //Shooter
@@ -61,6 +63,7 @@ object Constants {
     const val joystickPort = 1
 
     //Vision
+    const val jetsonDIOPort = 0
     const val visionHost = "10.43.30.20"
     const val visionPort = 9001
 
