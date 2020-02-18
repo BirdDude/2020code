@@ -11,6 +11,7 @@ import frc.robot.commands.Climber.Winch
 import frc.robot.commands.ColorWheel.Actuator
 import frc.robot.commands.PowerCells.Intake
 import frc.robot.commands.PowerCells.RotateIntakeBarTo
+import frc.robot.commands.PowerCells.Shooter
 
 
 /**
@@ -33,6 +34,7 @@ class RobotContainer {
     private val m_climberSubsystem = ClimberSubsystem()
 //    private val m_LidarSubsystem = LidarSubsystem()
     private val m_visionSubsystem = VisionSubsystem()
+    private val m_shooterSubsystem = ShooterSubsystem()
 
     /**Commands */
 //    private val m_defaultDrive = DefaultDrivePID(m_joystickSubsystem, m_driveSubsystem)
@@ -42,6 +44,7 @@ class RobotContainer {
     private val Winch = Winch(m_climberSubsystem)
 //    private val Actuator = Actuator(m_controlPanelSubsystem )
     private val Intake = Intake(m_intakeSubsystem)
+    private val Shooter = Shooter(m_shooterSubsystem)
 
 
     private val joystick: Joystick
@@ -63,9 +66,10 @@ class RobotContainer {
 //        JoystickButton(joystick, 6).whenPressed(Lifter.Lower()).whenReleased(Lifter.Stop())
 
         //Intake
-        JoystickButton(joystick, 2).whenPressed(RotateIntakeBarTo(Constants.downPosEncoderTicks, m_intakeSubsystem).andThen(Intake.Run()))
-                .whenReleased(Intake.Stop().andThen(RotateIntakeBarTo(0.0, m_intakeSubsystem)))
-
+//        JoystickButton(joystick, 2).whenPressed(RotateIntakeBarTo(Constants.downPosEncoderTicks, m_intakeSubsystem).andThen(Intake.Run()))
+//                .whenReleased(Intake.Stop().andThen(RotateIntakeBarTo(0.0, m_intakeSubsystem)))
+//        JoystickButton(joystick, 11).whenPressed(Runnable { println(m_intakeSubsystem.m_intakeDeploy.selectedSensorPosition) })
+        JoystickButton(joystick, 11).whenPressed(Shooter.Run()).whenReleased(Shooter.Stop())
 
 //        ColorWheel extending system
 //        var is11Active = false
@@ -125,13 +129,13 @@ class RobotContainer {
         // Configure the button bindings
 
         configureButtonBindings()
-//        m_defaultDrive.initialize()
+        m_defaultDrive.initialize()
 
     }
 
-//    fun getCartesianDrive():Command {
-//        return m_defaultDrive
-//    }
+    fun getCartesianDrive():Command {
+        return m_defaultDrive
+    }
 
 /**
     fun generatePathfindingCommand(trajectory: Trajectory): Command {

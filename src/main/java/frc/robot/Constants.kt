@@ -22,6 +22,7 @@ object Constants {
 
     //Info (Meters)
     val wheelRad = 0.0762
+    val wheelDiam = 0.1524
     val wheelCircum = 2 * Math.PI * wheelRad
 
 
@@ -40,12 +41,13 @@ object Constants {
     //Intake
     const val intakeDeployPort = 6
     const val intakePort = 7
-    const val insideIntakePort = -1
-    const val downPosEncoderTicks = 945.0
+    const val insideIntakePort = 8
+    const val downPosEncoderTicks = -1.0
+    const val upPosEncoderTicks = -1.0
 
 
     //Shooter
-    const val shooterPort = -1
+    const val shooterPort = 9
     const val maxShooterRPM = -1.0
 
     //Transport

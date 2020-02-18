@@ -21,6 +21,8 @@ public class RotateIntakeBarTo extends PIDCommand {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final IntakeSubsystem m_intakeSubsystem;
 
+  private Double target = Constants.upPosEncoderTicks;
+
 
   public RotateIntakeBarTo(Double target, IntakeSubsystem intakeSubsystem) {
     super (
@@ -37,10 +39,7 @@ public class RotateIntakeBarTo extends PIDCommand {
             intakeSubsystem
     );
 
-    getController().setTolerance(30, 20);
-
     m_intakeSubsystem = intakeSubsystem;
-    addRequirements(intakeSubsystem);
   }
 
   @Override
