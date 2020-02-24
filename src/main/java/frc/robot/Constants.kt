@@ -33,6 +33,12 @@ object Constants {
     const val backLeftWheelPort =     3
     const val backRightWheelPort =    4
 
+    const val ks = 1.03
+    const val kv = 3.65
+    const val ka = 0.754
+    const val r2 = 1.0
+    const val trackWidth = 1.243981801253886
+
     //Control Panel
     const val rotationActuatorPort =  0
     const val rotatorPort = 6
@@ -42,8 +48,8 @@ object Constants {
     const val intakeDeployPort = 6
     const val intakePort = 7
     const val insideIntakePort = 8
-    const val downPosEncoderTicks = -1.0
-    const val upPosEncoderTicks = -1.0
+    const val downPosEncoderTicks = 1057.00
+    const val upPosEncoderTicks = 5.0
 
 
     //Shooter
@@ -51,7 +57,7 @@ object Constants {
     const val maxShooterRPM = -1.0
 
     //Transport
-    const val transportPort = -1
+    const val transportPort = 14
     const val transportSpeed = 0.0
 
     //Climber
@@ -61,11 +67,12 @@ object Constants {
 
     /**Inputs */
     //Controllers
-    const val xboxPort = 0
-    const val joystickPort = 1
+    const val driverJoystickPort = 1
+    const val alternateJoystickPort = -1
+
+    const val xboxPort = -1
 
     //Vision
-    const val jetsonDIOPort = 0
     const val visionHost = "10.43.30.20"
     const val visionPort = 9001
 
@@ -97,9 +104,11 @@ object Constants {
     const val yI = 0.0
     const val yD = 0.0
         //Rotation (Configured)
-    const val tP : Double = 5.0
-    const val tI : Double = 0.0
-    const val tD : Double = 0.5
+    const val tP = 5.0
+    const val tI = 0.0
+    const val tD = 0.5
+    const val tTolerance = 0.02
+    const val tVelTolerance = 0.1
 
 
 }

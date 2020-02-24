@@ -14,7 +14,7 @@
 
  */
 
-package frc.robot.subsystems
+package frc.robot.subsystems.Drivetrain
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX
@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.interfaces.Accelerometer
 import edu.wpi.first.wpilibj.kinematics.MecanumDriveKinematics
+import edu.wpi.first.wpilibj.kinematics.MecanumDriveMotorVoltages
 import edu.wpi.first.wpilibj.kinematics.MecanumDriveOdometry
 import edu.wpi.first.wpilibj.kinematics.MecanumDriveWheelSpeeds
 import edu.wpi.first.wpilibj.trajectory.Trajectory
@@ -61,7 +62,7 @@ class DriveSubsystem : SubsystemBase() {
 
 
     //Gyro Init
-    val gyro = AHRS(SPI.Port.kMXP)
+//    val gyro = AHRS(SPI.Port.kMXP)
 
 
 
@@ -70,7 +71,7 @@ class DriveSubsystem : SubsystemBase() {
     lateinit var speed: () -> MecanumDriveWheelSpeeds
 
     init {
-        gyro.reset()
+//        gyro.reset()
     }
 
 
@@ -126,11 +127,13 @@ class DriveSubsystem : SubsystemBase() {
         m_pose = m_odometry.update(Rotation2d.fromDegrees(getHeading()), speed.invoke())
 
         maxSpeed = Math.max(speed.invoke().frontLeftMetersPerSecond, maxSpeed)
+//        println("FL: " + frontLeftMotor.getSelectedSensorPosition() + "\nFR: " + frontRightMotor.getSelectedSensorPosition() + "\nBL: " + backLeftMotor.getSelectedSensorPosition() + "\nBR: " + backRightMotor.getSelectedSensorPosition())
 //        println(maxSpeed)
     }
 
     fun getHeading(): Double {
-        return gyro.angle
+//        return gyro.angle
+        return 0.0
     }
 
     fun setManualWheelSpeeds(speed: MecanumDriveWheelSpeeds) {
@@ -143,13 +146,21 @@ class DriveSubsystem : SubsystemBase() {
         backRightMotor.set(speed.rearRightMetersPerSecond / Constants.forwardMaxVel)
     }
 
+    fun setSpeedVoltage(speed: MecanumDriveMotorVoltages) {
+        frontLeftMotor.setVoltage(speed.frontLeftVoltage)
+        frontRightMotor.setVoltage(speed.frontRightVoltage)
+        backLeftMotor.setVoltage(speed.rearLeftVoltage)
+        backRightMotor.setVoltage(speed.rearRightVoltage)
+    }
+
     fun getWheelSpeeds(): MecanumDriveWheelSpeeds {
         return MecanumDriveWheelSpeeds(frontLeftMotor.selectedSensorVelocity * (10.0/4096) * Constants.wheelCircum, frontRightMotor.selectedSensorVelocity  *(10.0/4096) * Constants.wheelCircum,
                 backLeftMotor.selectedSensorVelocity * (10.0/4096) * Constants.wheelCircum,  backRightMotor.selectedSensorVelocity * (10.0/4096) * Constants.wheelCircum)
     }
 
     fun getWheelAcc(): Double {
-        return gyro.rawAccelX.toDouble()
+//        return gyro.rawAccelX.toDouble()
+        return 0.0
     }
 
     fun getMPose(): Pose2d {

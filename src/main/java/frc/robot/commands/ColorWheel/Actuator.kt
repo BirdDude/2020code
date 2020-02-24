@@ -2,26 +2,27 @@
 package frc.robot.commands.ColorWheel
 
 import edu.wpi.first.wpilibj2.command.InstantCommand
-import frc.robot.subsystems.SpinSubsystem
+import frc.robot.subsystems.ColorWheel.ActuatorSubsystem
+import frc.robot.subsystems.ColorWheel.SpinSubsystem
 
 /**
  * An example command that uses an example subsystem.
  */
-class Actuator(spin: SpinSubsystem) {
-    val m_spinSubsystem: SpinSubsystem = spin
+class Actuator(act: ActuatorSubsystem) {
+    val m_actuatorSubsystem: ActuatorSubsystem = act
 
     inner class ExtendActuator: InstantCommand() {
 
-        override fun initialize() { m_spinSubsystem.moveActuatorOut() }
+        override fun initialize() { m_actuatorSubsystem.moveActuatorOut() }
 
-        init { addRequirements(m_spinSubsystem) }
+        init { addRequirements(m_actuatorSubsystem) }
     }
 
     inner class RetractActuator() : InstantCommand() {
 
-        override fun initialize() { m_spinSubsystem.moveActuatorIn() }
+        override fun initialize() { m_actuatorSubsystem.moveActuatorIn() }
 
-        init { addRequirements(m_spinSubsystem) }
+        init { addRequirements(m_actuatorSubsystem) }
     }
 
 }

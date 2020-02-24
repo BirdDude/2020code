@@ -2,13 +2,16 @@
 package frc.robot.commands.ColorWheel
 
 import edu.wpi.first.wpilibj2.command.CommandBase
-import frc.robot.ExampleClasses.ExampleSubsystem
-import frc.robot.subsystems.SpinSubsystem
+import frc.robot.subsystems.ColorWheel.SpinSubsystem
 
 /**
  * An example command that uses an example subsystem.
  */
 class SpinToColorTarget(val m_SpinSubsystem: SpinSubsystem, var m_colorTarget: String) : CommandBase() {
+    init {
+        addRequirements(m_SpinSubsystem)
+    }
+
 
     var spinPos = true
     var currentPos = m_SpinSubsystem.getNearestColor()
@@ -39,10 +42,4 @@ class SpinToColorTarget(val m_SpinSubsystem: SpinSubsystem, var m_colorTarget: S
         return m_SpinSubsystem.getNearestColor().equals(m_colorTarget)
     }
 
-    /**
-     * Creates a new ExampleCommand.
-     *
-     * param subsystem The subsystem used by this command.
-     */
-    init { addRequirements(m_SpinSubsystem) }
 }

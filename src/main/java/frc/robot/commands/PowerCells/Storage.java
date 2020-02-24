@@ -9,34 +9,47 @@ package frc.robot.commands.PowerCells;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.PowerCells.IntakeSubsystem;
+import frc.robot.subsystems.PowerCells.TransportSubsystem;
 
 /**
  * An example command that uses an example subsystem.
  */
-public final class Intake {
-  private final IntakeSubsystem m_intakeSubsystem;
+public final class Storage {
+  private final TransportSubsystem m_transportSubsystem;
 
-  public Intake(IntakeSubsystem intake) { m_intakeSubsystem = intake; }
+  public Storage(TransportSubsystem transp) { m_transportSubsystem = transp; }
 
   public class Run extends InstantCommand {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-    public Run() { addRequirements(m_intakeSubsystem); }
+    public Run() { addRequirements(m_transportSubsystem); }
 
     @Override
     public void initialize() {
-      m_intakeSubsystem.m_intake.set(0.5);
-      m_intakeSubsystem.m_innerIntake.set(0.5);
+      m_transportSubsystem.m_storage.set(0.6);
     }
   }
 
   public class Stop extends InstantCommand {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-    public Stop() { addRequirements(m_intakeSubsystem); }
+    public Stop() { addRequirements(m_transportSubsystem); }
 
     @Override
     public void initialize() {
-      m_intakeSubsystem.m_intake.set(0.0);
-      m_intakeSubsystem.m_innerIntake.set(0.0);
+      m_transportSubsystem.m_storage.set(0.0);
     }
+  }
+
+  public class ForceRun extends InstantCommand {
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+
+    Double speed;
+
+    public ForceRun(double spd) {
+      speed = spd;
+      addRequirements(m_transportSubsystem);
+    }
+
+    @Override
+    public void initialize() { m_transportSubsystem.m_storage.set(speed); }
   }
 }

@@ -5,20 +5,20 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems
+package frc.robot.subsystems.Inputs
 
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
 
-class JoystickSubsystem : SubsystemBase() {
+class JoystickSubsystem(joyPort: Int) : SubsystemBase() {
     /**
      * Creates a new ExampleSubsystem.
      */
     var joystick: Joystick
 
     init {
-        joystick = Joystick(Constants.joystickPort)
+        joystick = Joystick(joyPort)
 
     }
 

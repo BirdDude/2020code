@@ -8,13 +8,15 @@
 package frc.robot.commands.Drivetrain
 
 import edu.wpi.first.wpilibj2.command.CommandBase
-import frc.robot.subsystems.*
+import frc.robot.subsystems.Drivetrain.DriveSubsystem
+import frc.robot.subsystems.Inputs.JoystickSubsystem
+import frc.robot.subsystems.Inputs.XboxSubsystem
 
 /**
  * An example command that uses an example subsystem.
  */
 
-class DefaultDrive(private val m_DriveSubsystem: DriveSubsystem, private val m_joystickSubsystem: JoystickSubsystem, private val m_xboxSubsystem: XboxSubsystem) : CommandBase() {
+class DefaultDrive(private val m_DriveSubsystem: DriveSubsystem, private val m_joystickSubsystem: JoystickSubsystem) : CommandBase() {
 
     /**
  * Creates a new ExampleCommand.

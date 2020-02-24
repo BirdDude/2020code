@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/ /* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */ /* Open Source Software - may be modified and shared by FRC teams. The code   */ /* must be accompanied by the FIRST BSD license file in the root directory of */ /* the project.                                                               */ /*----------------------------------------------------------------------------*/
-package frc.robot.subsystems
+package frc.robot.subsystems.ColorWheel
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX
@@ -14,7 +14,6 @@ import frc.robot.Constants
 
 class SpinSubsystem : SubsystemBase() {
 
-    var rotationActuator = Servo(Constants.rotationActuatorPort)
     var rotatorMotor = WPI_VictorSPX(Constants.rotatorPort)
     var colorSensor = ColorSensorV3(I2C.Port.kOnboard)
     private var color = colorSensor.color
@@ -23,13 +22,11 @@ class SpinSubsystem : SubsystemBase() {
     private val kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240)
     private val kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114)
     private val kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113)
-    private val kTestTarget = ColorMatch.makeColor(1.0,1.0,1.0 )
 
 
     override fun periodic() { }
 
-    fun moveActuatorIn() { rotationActuator.position = 0.17 }
-    fun moveActuatorOut() { rotationActuator.position = 0.82 }
+
 
     fun getColor(): Color {
         color = colorSensor.color
@@ -60,15 +57,7 @@ class SpinSubsystem : SubsystemBase() {
         }
     }
 
-
-    /**
-     * Creates a new ExampleSubsystem.
-     */
     init {
-        rotationActuator.setBounds(2.0, 1.8, 1.5, 1.2, 1.0)
-
-        moveActuatorIn()
-        rotationActuator
         m_colorMatcher.addColorMatch(kBlueTarget)
         m_colorMatcher.addColorMatch(kGreenTarget)
         m_colorMatcher.addColorMatch(kRedTarget)

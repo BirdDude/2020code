@@ -1,19 +1,21 @@
 /*----------------------------------------------------------------------------*/ /* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */ /* Open Source Software - may be modified and shared by FRC teams. The code   */ /* must be accompanied by the FIRST BSD license file in the root directory of */ /* the project.                                                               */ /*----------------------------------------------------------------------------*/
-package frc.robot.subsystems
+package frc.robot.subsystems.Inputs
 
-import edu.wpi.first.wpilibj.XboxController
+import edu.wpi.first.wpilibj.I2C
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import frc.robot.Constants.xboxPort
+import frc.robot.Logic.LidarLite
 
-class XboxSubsystem : SubsystemBase() {
-    /**
-     * Creates a new ExampleSubsystem.
-     */
-    var xboxController: XboxController
+class LidarSubsystem : SubsystemBase() {
 
-    init {
-        xboxController = XboxController(xboxPort)
-    }
+    val cheddar = LidarLite(I2C.Port.kMXP)
 
     override fun periodic() { }
+
+    fun getLidar(): LidarLite {
+        return cheddar
+    }
+
+    init {
+          cheddar.startMeasuring()
+    }
 }

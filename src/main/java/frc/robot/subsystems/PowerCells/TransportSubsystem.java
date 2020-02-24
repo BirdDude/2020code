@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.PowerCells;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -14,16 +14,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class TransportSubsystem extends SubsystemBase {
 
-  WPI_TalonSRX m_storage = new WPI_TalonSRX(Constants.transportPort);
+  public WPI_TalonSRX m_storage = new WPI_TalonSRX(Constants.transportPort);
 
   public TransportSubsystem() {
-
+    m_storage.setInverted(true);
   }
 
   @Override
   public void periodic() { }
 
-  void loadBall() {
-    m_storage.set(Constants.transportSpeed);
-  }
 }
