@@ -19,19 +19,21 @@ import java.util.concurrent.TimeUnit;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Shoot extends CommandBase {
+  /**
   private ShooterSubsystem shooterSubsystem;
   private TransportSubsystem transportSubsystem;
   private JoystickSubsystem joystickSubsystem;
   private static final Timer timer = new Timer();
 
   public Shoot(ShooterSubsystem shooter, TransportSubsystem transport, JoystickSubsystem stick) {
+
     shooterSubsystem = shooter;
     transportSubsystem = transport;
     joystickSubsystem = stick;
     
     timer.reset();
     timer.start();
-    addRequirments(shooter, transport, stick);
+    addRequirements(shooter, transport, stick);
   }
 
   // Called when the command is initially scheduled.
@@ -42,7 +44,7 @@ public class Shoot extends CommandBase {
     TimeUnit.MILLISECONDS.sleep(200);
     transportSubsystem.setPower(0.0);
     TimeUnit.MILLISECONDS.sleep(1000);
-    shooterSubsystem.setPower();
+    shooterSubsystem.setPower(0.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -66,4 +68,5 @@ public class Shoot extends CommandBase {
   public boolean isFinished() {
     return false;
   }
+  **/
 }

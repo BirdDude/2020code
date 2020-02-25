@@ -5,28 +5,33 @@ import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
-import edu.wpi.first.wpilibj.kinematics.MecanumDriveMotorVoltages
+import edu.wpi.first.wpilibj.geometry.Pose2d
+import edu.wpi.first.wpilibj.geometry.Rotation2d
+import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.trajectory.Trajectory
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
-import edu.wpi.first.wpilibj2.command.*
+import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.MecanumControllerCommand
+import edu.wpi.first.wpilibj2.command.WaitCommand
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
-import frc.robot.commands.Drivetrain.DefaultDrive
 import frc.robot.commands.Climber.Lifter
 import frc.robot.commands.Climber.Winch
-import frc.robot.commands.Drivetrain.RotateTo
+import frc.robot.commands.Drivetrain.DefaultDrive
 import frc.robot.commands.PowerCells.Intake
 import frc.robot.commands.PowerCells.RotateIntakeBarTo
 import frc.robot.commands.PowerCells.Shooter
+import frc.robot.commands.PowerCells.Storage
 import frc.robot.subsystems.Climber.ClimberSubsystem
+import frc.robot.subsystems.ColorWheel.ActuatorSubsystem
 import frc.robot.subsystems.Drivetrain.DriveSubsystem
 import frc.robot.subsystems.Inputs.JoystickSubsystem
 import frc.robot.subsystems.Inputs.VisionSubsystem
-import frc.robot.subsystems.Inputs.XboxSubsystem
 import frc.robot.subsystems.PowerCells.IntakeSubsystem
 import frc.robot.subsystems.PowerCells.ShooterSubsystem
 import frc.robot.subsystems.PowerCells.TransportSubsystem
-import frc.robot.commands.PowerCells.Storage
-import frc.robot.subsystems.ColorWheel.ActuatorSubsystem
+import java.util.List
 import java.util.function.Consumer
 import java.util.function.Supplier
 
@@ -84,6 +89,19 @@ class RobotContainer {
             .andThen(storage.Run()).andThen(WaitCommand(runTime)).andThen(storage.Stop()).andThen(WaitCommand(waitTime))
 
 
+    val config: TrajectoryConfig = TrajectoryConfig(Constants.forwardMaxVel,
+            Constants.forwardMaxAcc) // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(m_driveSubsystem.kDriveKinematics)
+
+    var exampleTrajectory: Trajectory = TrajectoryGenerator.generateTrajectory( // Start at the origin facing the +X direction
+            Pose2d(0.0, 0.0, Rotation2d(0.0)),  // Pass through these two interior waypoints, making an 's' curve path
+            List.of(
+                    Translation2d(1.0, 1.0),
+                    Translation2d(2.0, -1.0)
+            ),  // End 3 meters straight ahead of where we started, facing forward
+            Pose2d(3.0, 0.0, Rotation2d(0.0)),
+            config
+    )
 
 
     /**
@@ -93,16 +111,23 @@ class RobotContainer {
      */
     private fun configureButtonBindings() {
         //Run Interior to Shoot WHILE shooter is revved
-
+        var tempMaxVel = 0.0
+        var tempMaxAcc = 0.0
         //Spool Shooter
         JoystickButton(driverJoystick, 2).whenPressed(shooter.ForceRun(-0.3).alongWith(storage.ForceRun(0.3))).whenReleased(shooter.Stop().alongWith(storage.Stop()))
 
 
         JoystickButton(driverJoystick, 1).whenPressed(shooter.ForceRun(0.65).alongWith(shoot)).whenInactive(shooter.Stop().alongWith(storage.Stop()))
         //Run Intake
-//        JoystickButton(driverJoystick, 3).or(JoystickButton(driverJoystick, 4)).or(JoystickButton(driverJoystick, 5)).or(JoystickButton(driverJoystick, 6))
-//                .whileActiveOnce(RotateIntakeBarTo(Constants.downPosEncoderTicks, m_intakeSubsystem).andThen(Intake.Run()))
-//                .whenInactive(Intake.Stop().andThen(RotateIntakeBarTo(0.0, m_intakeSubsystem)))
+        JoystickButton(driverJoystick, 3).or(JoystickButton(driverJoystick, 4))
+                .whileActiveOnce(Bar.moveDown().andThen(Intake.Run()))
+                .whenInactive(Intake.Stop().andThen(Bar.moveUp()))
+
+        //Reverse Intake
+         JoystickButton(driverJoystick, 5).or(JoystickButton(driverJoystick, 6))
+                 .whileActiveOnce(Bar.moveDown().andThen(Intake.Reverse()))
+                 .whenInactive(Intake.Stop().andThen(Bar.moveUp()))
+
 
 
         JoystickButton(driverJoystick, 3).whenPressed(Intake.Run()).whenReleased(Intake.Stop())
@@ -112,6 +137,12 @@ class RobotContainer {
         JoystickButton(driverJoystick, 12).whenPressed(Bar.moveUp())
         JoystickButton(driverJoystick, 10).whenPressed(Bar.moveDown())
         JoystickButton(driverJoystick, 6).whenPressed(Runnable { m_intakeSubsystem.m_intakeDeploy.selectedSensorPosition = 0})
+
+        JoystickButton(driverJoystick, 5).whileHeld(Runnable {
+            tempMaxVel = Math.max(tempMaxVel, m_driveSubsystem.maxSpeed)
+            tempMaxAcc = Math.max(tempMaxAcc, m_driveSubsystem.getWheelAcc())
+            println("maxSpeed: $tempMaxVel \nmaxAcc: $tempMaxAcc")
+        })
         //Rotate Counter-Clockwise
 //        JoystickButton(driverJoystick, 9).whenPressed(RotateTo(-90.0, m_driveSubsystem).withTimeout(1.5))
 //
@@ -143,9 +174,6 @@ class RobotContainer {
 
     init {
 
-        //Jetson Bootup
-//        BootJetson().schedule()
-
         driverJoystick = m_driverJoystickSubsystem.joystick
 //        alternateJoystick = m_alternateJoystickSubsystem.joystick
 
@@ -163,25 +191,23 @@ class RobotContainer {
 
 
     fun generatePathfindingCommand(trajectory: Trajectory): Command {
-        var command = MecanumControllerCommand(
+        return MecanumControllerCommand(
                 trajectory,
                 Supplier { m_driveSubsystem.getMPose() },
                 SimpleMotorFeedforward(Constants.ks, Constants.kv, Constants.ka),
                 m_driveSubsystem.kDriveKinematics,
                 PIDController(Constants.xP, Constants.xI, Constants.xD),
                 PIDController(Constants.yP, Constants.yI, Constants.yD),
-                ProfiledPIDController(Constants.tP, Constants.tI, Constants.tD, TrapezoidProfile.Constraints(Constants.forwardMaxVel, Constants.forwardMaxAcc)),//@TODO FIX THIS
+                ProfiledPIDController(Constants.tP, Constants.tI, Constants.tD, TrapezoidProfile.Constraints(Constants.maxRotVel, Constants.maxRotAcc)),//@TODO FIX THIS
                 5.0,  //@TODO FIX THIS
                 PIDController(0.00239, 0.0, 0.0),
                 PIDController(0.00239, 0.0, 0.0),
                 PIDController(0.00239, 0.0, 0.0),
                 PIDController(0.00239, 0.0, 0.0),
                 Supplier { m_driveSubsystem.getWheelSpeeds() },
-                Consumer{output -> m_driveSubsystem.setSpeedVoltage(output)},
+                Consumer { output -> m_driveSubsystem.setSpeedVoltage(output)},
                 m_driveSubsystem
         )
-
-        return command
     }
 
 }

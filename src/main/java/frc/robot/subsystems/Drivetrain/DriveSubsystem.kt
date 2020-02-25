@@ -57,12 +57,14 @@ class DriveSubsystem : SubsystemBase() {
     var backLeftPos = Translation2d(-0.381, -0.381)
     var kDriveKinematics = MecanumDriveKinematics(frontLeftPos, frontRightPos, backLeftPos, backRightPos)
     var maxSpeed = 0.0
+    var currSpeed = 0.0
+    var lastSpeed = 0.0
 
     var kDriveConstraints = MecanumDriveKinematicsConstraint(kDriveKinematics, Constants.forwardMaxVel)
 
 
     //Gyro Init
-//    val gyro = AHRS(SPI.Port.kMXP)
+    val gyro = AHRS(SPI.Port.kMXP)
 
 
 
@@ -71,7 +73,7 @@ class DriveSubsystem : SubsystemBase() {
     lateinit var speed: () -> MecanumDriveWheelSpeeds
 
     init {
-//        gyro.reset()
+        gyro.reset()
     }
 
 
@@ -127,13 +129,15 @@ class DriveSubsystem : SubsystemBase() {
         m_pose = m_odometry.update(Rotation2d.fromDegrees(getHeading()), speed.invoke())
 
         maxSpeed = Math.max(speed.invoke().frontLeftMetersPerSecond, maxSpeed)
+        lastSpeed = currSpeed
+        currSpeed = (frontLeftMotor.selectedSensorVelocity * (10.0/4096) * Constants.wheelCircum + frontRightMotor.selectedSensorVelocity  *(10.0/4096) * Constants.wheelCircum + backLeftMotor.selectedSensorVelocity * (10.0/4096) * Constants.wheelCircum +  backRightMotor.selectedSensorVelocity * (10.0/4096) * Constants.wheelCircum) / 4.0
+
 //        println("FL: " + frontLeftMotor.getSelectedSensorPosition() + "\nFR: " + frontRightMotor.getSelectedSensorPosition() + "\nBL: " + backLeftMotor.getSelectedSensorPosition() + "\nBR: " + backRightMotor.getSelectedSensorPosition())
 //        println(maxSpeed)
     }
 
     fun getHeading(): Double {
-//        return gyro.angle
-        return 0.0
+        return gyro.angle
     }
 
     fun setManualWheelSpeeds(speed: MecanumDriveWheelSpeeds) {
@@ -159,8 +163,7 @@ class DriveSubsystem : SubsystemBase() {
     }
 
     fun getWheelAcc(): Double {
-//        return gyro.rawAccelX.toDouble()
-        return 0.0
+        return (currSpeed - lastSpeed) / 0.05
     }
 
     fun getMPose(): Pose2d {

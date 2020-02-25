@@ -39,4 +39,15 @@ public final class Intake {
       m_intakeSubsystem.m_innerIntake.set(0.0);
     }
   }
+
+  public class Reverse extends InstantCommand {
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+    public Reverse() { addRequirements(m_intakeSubsystem); }
+
+    @Override
+    public void initialize() {
+      m_intakeSubsystem.m_intake.set(-0.5);
+      m_intakeSubsystem.m_innerIntake.set(-0.5);
+    }
+  }
 }

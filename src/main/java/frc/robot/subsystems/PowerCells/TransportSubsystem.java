@@ -21,7 +21,7 @@ public class TransportSubsystem extends SubsystemBase {
   }
 
   public void setPower(double power) {
-    m_storgae.set(power);
+    m_storage.set(power);
   }
 
   @Override
