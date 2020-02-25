@@ -20,6 +20,10 @@ public class TransportSubsystem extends SubsystemBase {
     m_storage.setInverted(true);
   }
 
+  public void setPower(double power) {
+    m_storgae.set(power);
+  }
+
   @Override
   public void periodic() { }
 

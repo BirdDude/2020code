@@ -21,6 +21,10 @@ public class ShooterSubsystem extends SubsystemBase {
     m_flyWheel.setInverted(true);
   }
 
+  public void setPower(double power) {
+    m_flyWheel.set(power);
+  }
+
   @Override
   public void periodic() { }
 
