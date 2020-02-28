@@ -1,6 +1,7 @@
 /*----------------------------------------------------------------------------*/ /* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */ /* Open Source Software - may be modified and shared by FRC teams. The code   */ /* must be accompanied by the FIRST BSD license file in the root directory of */ /* the project.                                                               */ /*----------------------------------------------------------------------------*/
 package frc.robot
 
+import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController
@@ -13,12 +14,16 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.ConditionalCommand
 import edu.wpi.first.wpilibj2.command.MecanumControllerCommand
 import edu.wpi.first.wpilibj2.command.WaitCommand
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
+import frc.robot.commands.Autonomous.DriveToPowerPort
+import frc.robot.commands.Autonomous.ForceDrive
 import frc.robot.commands.Climber.Lifter
 import frc.robot.commands.Climber.Winch
 import frc.robot.commands.Drivetrain.DefaultDrive
+import frc.robot.commands.Drivetrain.RotateTo
 import frc.robot.commands.PowerCells.Intake
 import frc.robot.commands.PowerCells.RotateIntakeBarTo
 import frc.robot.commands.PowerCells.Shooter
@@ -27,7 +32,7 @@ import frc.robot.subsystems.Climber.ClimberSubsystem
 import frc.robot.subsystems.ColorWheel.ActuatorSubsystem
 import frc.robot.subsystems.Drivetrain.DriveSubsystem
 import frc.robot.subsystems.Inputs.JoystickSubsystem
-import frc.robot.subsystems.Inputs.VisionSubsystem
+import frc.robot.subsystems.Inputs.Jetson.VisionSubsystem
 import frc.robot.subsystems.PowerCells.IntakeSubsystem
 import frc.robot.subsystems.PowerCells.ShooterSubsystem
 import frc.robot.subsystems.PowerCells.TransportSubsystem
@@ -61,7 +66,7 @@ class RobotContainer {
     private val m_actuatorSubsystem = ActuatorSubsystem()
     private val m_climberSubsystem = ClimberSubsystem()
 //    private val m_LidarSubsystem = LidarSubsystem()
-    private val m_visionSubsystem = VisionSubsystem()
+    private val m_visionSubsystem = VisionSubsystem(Constants.visionHost, Constants.visionPort)
     private val m_shooterSubsystem = ShooterSubsystem()
     private val m_transportSubsystem = TransportSubsystem()
 
@@ -176,6 +181,7 @@ class RobotContainer {
 
         driverJoystick = m_driverJoystickSubsystem.joystick
 //        alternateJoystick = m_alternateJoystickSubsystem.joystick
+        m_visionSubsystem.startUp()
 
 
         // Configure the button bindings
@@ -207,6 +213,18 @@ class RobotContainer {
                 Supplier { m_driveSubsystem.getWheelSpeeds() },
                 Consumer { output -> m_driveSubsystem.setSpeedVoltage(output)},
                 m_driveSubsystem
+        )
+    }
+
+    fun autoPathSimple():Command {
+        return DriveToPowerPort(m_driveSubsystem, m_visionSubsystem, 0.3).andThen(
+                shoot.withTimeout(4.0)
+        ).andThen(
+                ForceDrive(m_driveSubsystem, -0.75, 0.0, 0.0)
+        ).andThen(
+                WaitCommand(3.0)
+        ).andThen(
+                ForceDrive(m_driveSubsystem, 0.0, 0.0, 0.0)
         )
     }
 

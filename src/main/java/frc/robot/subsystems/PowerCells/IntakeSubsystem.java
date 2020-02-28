@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems.PowerCells;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,6 +26,18 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     m_intakeDeploy.setSelectedSensorPosition(0);
     m_intakeDeploy.setSensorPhase(false);
+    m_intakeDeploy.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    m_intakeDeploy.configMotionSCurveStrength(2);
+
+    m_intakeDeploy.config_kP(0, 0.0); //0.2903 (maybe)
+    m_intakeDeploy.config_kI(0, 0.0);
+    m_intakeDeploy.config_kD(0, 0.0);
+
+    m_intakeDeploy.config_kF(0, 0.5);
+
+    m_intakeDeploy.configMotionAcceleration(20);
+    m_intakeDeploy.configMotionCruiseVelocity(400);
+
   }
 
   public Integer getDeployTicks() {

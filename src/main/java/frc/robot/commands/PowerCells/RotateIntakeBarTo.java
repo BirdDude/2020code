@@ -7,6 +7,7 @@
 
 package frc.robot.commands.PowerCells;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -22,25 +23,18 @@ public class RotateIntakeBarTo extends CommandBase {
   private final IntakeSubsystem m_intakeSubsystem;
 
   private Double target = Constants.upPosEncoderTicks;
-  private PIDController m_controller = new PIDController(0.45, 0.0, 0.0);
 
 
   public RotateIntakeBarTo(IntakeSubsystem intakeSubsystem) {
-    m_controller.setSetpoint(target);
-//    m_controller.setTolerance(10.0, 5.0);
-
     m_intakeSubsystem = intakeSubsystem;
+
   }
 
   @Override
   public void execute() {
-    m_controller.setSetpoint(target);
-    Double power = m_controller.calculate(m_intakeSubsystem.intakeEncoderTicks, target) / Constants.downPosEncoderTicks;
+    m_intakeSubsystem.m_intakeDeploy.config_kF(0, kF());
+    m_intakeSubsystem.m_intakeDeploy.set(ControlMode.MotionMagic, target);
 
-    if (Math.abs(power) < 0.1) power = 0.0;
-
-    System.out.println(power);
-    m_intakeSubsystem.m_intakeDeploy.set(power);
   }
 
   @Override
@@ -60,6 +54,10 @@ public class RotateIntakeBarTo extends CommandBase {
     @Override
     public void initialize() {
       target = Constants.downPosEncoderTicks;    }
+  }
+
+  private Double kF() {
+    return ((Constants.armLen*Constants.armWeight*Constants.armResistance) / (Constants.kt) ) * Math.cos(Math.toRadians(m_intakeSubsystem.intakeEncoderTicks/1024.0));
   }
 
 }

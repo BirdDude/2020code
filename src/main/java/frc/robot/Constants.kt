@@ -48,8 +48,12 @@ object Constants {
     const val intakeDeployPort = 6
     const val intakePort = 7
     const val insideIntakePort = 8
-    const val downPosEncoderTicks = 1057.00
+    const val downPosEncoderTicks = 1057.0
     const val upPosEncoderTicks = 5.0
+    const val kt = 0.71 // meter-kg / Volt
+    const val armLen = 0.206375 //meters
+    const val armWeight = 0.0 //kg
+    const val armResistance = 0.1119402985
 
 
     //Shooter
