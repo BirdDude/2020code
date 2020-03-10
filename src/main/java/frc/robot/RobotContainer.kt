@@ -18,10 +18,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.WaitCommand
 import edu.wpi.first.wpilibj2.command.button.Button
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
-import frc.robot.commands.Autonomous.DriveDistance
-import frc.robot.commands.Autonomous.DriveToPowerPort
-import frc.robot.commands.Autonomous.ForceDrive
-import frc.robot.commands.Autonomous.RotateUntillPowerPort
+import frc.robot.commands.Autonomous.*
 import frc.robot.commands.Climber.Lifter
 import frc.robot.commands.Climber.Winch
 import frc.robot.commands.ColorWheel.Actuator
@@ -90,8 +87,8 @@ class RobotContainer {
 //    private val spinToColor = SpinToColorTarget(m_controlPanelSubsystem)
 
   /** AUTO Commands */
-    private val rotateUntillPowerPort = RotateUntillPowerPort(m_driveSubsystem, m_visionSubsystem)
-    private val driveToPowerPort = DriveToPowerPort(m_driveSubsystem, m_visionSubsystem, 1.5)
+    private val auto = Auto(m_driveSubsystem, m_visionSubsystem);
+    private val nullDrive = NullDrive(m_driveSubsystem);
 
 
     var runTime = 1.00
@@ -208,7 +205,7 @@ class RobotContainer {
 //                .andThen(shoot.withTimeout(7.0)).andThen(ForceDrive(m_driveSubsystem, -0.5, 0.0, 0.0)).andThen(WaitCommand(2.0))
 //                .andThen(ForceDrive(m_driveSubsystem, 0.0, 0.0, 0.0))
 
-        return driveToPowerPort
+        return auto.andThen(shooter.ForceRun(power).alongWith(shoot).alongWith(nullDrive)).whenInactive(shooter.Stop().alongWith(storage.Stop()))
     }
 
 
