@@ -33,13 +33,13 @@ public class VisionSubsystem extends SubsystemBase {
     private static final byte[] GET_DATA_COMMAND = "DATA\n".getBytes();
     private static final byte[] STOP_COMMAND = "STOP\n".getBytes();
     private Map<String, Double> visionData;
-    private double loadingBayBearing = 0.0;
-    private double loadingBayYAngle = 0.0;
-    private double loadingBayDistance = 0.0;
+    private double loadingBayBearing = Double.MAX_VALUE;
+    private double loadingBayYAngle = Double.MAX_VALUE;
+    private double loadingBayDistance = Double.MAX_VALUE;
 
-    private double powerPortBearing = 0.0;
-    private double powerPortYAngle = 0.0;
-    private double powerPortDistance = 0.0;
+    private double powerPortBearing = Double.MAX_VALUE;
+    private double powerPortYAngle = Double.MAX_VALUE;
+    private double powerPortDistance = Double.MAX_VALUE;
 
 
     /**
@@ -52,7 +52,7 @@ public class VisionSubsystem extends SubsystemBase {
         this.port = port;
     }
 
-    public synchronized void startUp() throws IOException {
+    public synchronized void startUp() {
 
         System.out.println("Opening connection to Jetson on " + host + ":" + port +
                 " with " + CONNECTION_TIMEOUT_SEC + " second timeout");
@@ -88,7 +88,7 @@ public class VisionSubsystem extends SubsystemBase {
         connectThread.start();
     }
 
-    public synchronized void shutDown() throws IOException {
+    public synchronized void shutDown() {
         System.out.println("Disconnecting from Jetson.");
         active = false;
 
@@ -233,22 +233,30 @@ public class VisionSubsystem extends SubsystemBase {
                     powerPortBearing = data.get("pprb");
                     powerPortYAngle = data.get("ppya");
                     powerPortDistance = data.get("ppd");
+                } else {
+                    powerPortBearing = Double.MIN_VALUE;
+                    powerPortYAngle = Double.MIN_VALUE;
+                    powerPortDistance = Double.MIN_VALUE;
                 }
             } catch (Exception e) {
-                powerPortBearing = 0.0;
-                powerPortYAngle = 0.0;
-                powerPortDistance = 0.0;
+                powerPortBearing = Double.MIN_VALUE;
+                powerPortYAngle = Double.MIN_VALUE;
+                powerPortDistance = Double.MIN_VALUE;
             }
             try {
                 if (data.get("lbrb") != null) {
                     loadingBayBearing = data.get("lbrb");
                     loadingBayYAngle = data.get("lbya");
                     loadingBayDistance = data.get("lbd");
+                } else {
+                    loadingBayBearing = Double.MIN_VALUE;
+                    loadingBayYAngle = Double.MIN_VALUE;
+                    loadingBayDistance = Double.MIN_VALUE;
                 }
             } catch (Exception e) {
-                loadingBayBearing = 0.0;
-                loadingBayYAngle = 0.0;
-                loadingBayDistance = 0.0;
+                loadingBayBearing = Double.MIN_VALUE;
+                loadingBayYAngle = Double.MIN_VALUE;
+                loadingBayDistance = Double.MIN_VALUE;
             }
         }
     }

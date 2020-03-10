@@ -15,6 +15,7 @@ import frc.robot.subsystems.PowerCells.IntakeSubsystem;
  */
 public final class Intake {
   private final IntakeSubsystem m_intakeSubsystem;
+  private final Double speed = 0.4;
 
   public Intake(IntakeSubsystem intake) { m_intakeSubsystem = intake; }
 
@@ -24,8 +25,8 @@ public final class Intake {
 
     @Override
     public void initialize() {
-      m_intakeSubsystem.m_intake.set(0.5);
-      m_intakeSubsystem.m_innerIntake.set(0.5);
+      m_intakeSubsystem.m_intake.set(speed);
+      m_intakeSubsystem.m_innerIntake.set(0.25);
     }
   }
 
@@ -46,7 +47,7 @@ public final class Intake {
 
     @Override
     public void initialize() {
-      m_intakeSubsystem.m_intake.set(-0.5);
+      m_intakeSubsystem.m_intake.set(-1 * speed);
       m_intakeSubsystem.m_innerIntake.set(-0.5);
     }
   }

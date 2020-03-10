@@ -32,6 +32,15 @@ public final class Winch {
     public Stop() { addRequirements(m_climbSubsystem); }
 
     @Override
-    public void initialize() { m_climbSubsystem.m_winch.set(0.6); }
+    public void initialize() { m_climbSubsystem.m_winch.set(0.0); }
+  }
+
+  public class RunFast extends InstantCommand {
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+
+    public RunFast() { addRequirements(m_climbSubsystem); }
+
+    @Override
+    public void initialize() { m_climbSubsystem.m_winch.set(0.8); }
   }
 }

@@ -108,12 +108,6 @@ class DriveSubsystem : SubsystemBase() {
         else mecanum.driveCartesian(trueX, -trueY, Math.pow(trueR, 2.0)*-1)
     }
 
-    fun driveCartesanRobot(x: Double, y: Double, rotation: Double) {
-        println("Rotation: " + rotation)
-
-        mecanum.driveCartesian(x, y, rotation)
-    }
-
     fun autoCartesian(x: Double, y: Double, rotation: Double) {
         mecanum.driveCartesian(x, y, rotation)
     }

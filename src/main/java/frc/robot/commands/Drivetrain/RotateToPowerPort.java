@@ -10,9 +10,11 @@ package frc.robot.commands.Drivetrain;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain.DriveSubsystem;
 import frc.robot.subsystems.Inputs.Jetson.VisionSubsystem;
+import frc.robot.subsystems.Inputs.JoystickSubsystem;
 
 /**
  * An example command that uses an example subsystem.
@@ -24,10 +26,10 @@ public class RotateToPowerPort extends CommandBase {
   private Joystick joystick;
   private PIDController controller;
 
-  public RotateToPowerPort(DriveSubsystem drive, VisionSubsystem vision, Joystick stick) {
+  public RotateToPowerPort(DriveSubsystem drive, VisionSubsystem vision, JoystickSubsystem stick) {
     driveSubsystem = drive;
     visionSubsystem = vision;
-    joystick = stick;
+    joystick = stick.getJoystick();
     controller = new PIDController(Constants.tP, Constants.tI, Constants.tD);
     controller.enableContinuousInput(-180, 180);
     controller.setTolerance(0.1, 0.2);
@@ -49,8 +51,8 @@ public class RotateToPowerPort extends CommandBase {
   @Override
   public void execute() {
     double output = controller.calculate(visionSubsystem.getPowerPortBearing(), 0.0);
-    driveSubsystem.driveCartesan(-joystick.getY(), joystick.getX(), -output / 51.43);
-    System.out.println(visionSubsystem.getPowerPortBearing());
+    if(visionSubsystem.getPowerPortBearing() != Double.MIN_VALUE) driveSubsystem.driveCartesan(joystick.getX(), joystick.getY(), -output / 51.43);
+    else driveSubsystem.driveCartesan(joystick.getX(), joystick.getY(), joystick.getTwist());
   }
 
   // Called once the command ends or is interrupted.
@@ -71,5 +73,13 @@ public class RotateToPowerPort extends CommandBase {
     return false;
   }
 
+  public class Stop extends InstantCommand {
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+    public Stop() {  }
 
+    @Override
+    public void initialize() {
+      cancel();
+    }
+  }
 }

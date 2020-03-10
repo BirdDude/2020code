@@ -41,15 +41,17 @@ object Constants {
 
     //Control Panel
     const val rotationActuatorPort =  0
-    const val rotatorPort = 6
+    const val rotatorPort = 15
 
 
     //Intake
     const val intakeDeployPort = 6
     const val intakePort = 7
     const val insideIntakePort = 8
-    const val downPosEncoderTicks = 1057.0
-    const val upPosEncoderTicks = 5.0
+
+    const val downPosEncoderTicks = 1275.0 //@TODO FIND NEW VALUES
+    const val upPosEncoderTicks = 208.0 //@TODO FIND NEW VALUES
+
     const val kt = 0.71 // meter-kg / Volt
     const val armLen = 0.206375 //meters
     const val armWeight = 0.0 //kg
@@ -57,12 +59,11 @@ object Constants {
 
 
     //Shooter
-    const val shooterPort = 9
+    const val shooterPort = 10
     const val maxShooterRPM = -1.0
 
     //Transport
-    const val transportPort = 14
-    const val transportSpeed = 0.0
+    const val transportPort = 9
 
     //Climber
     const val climbLifterPort = 13
@@ -71,8 +72,8 @@ object Constants {
 
     /**Inputs */
     //Controllers
-    const val driverJoystickPort = 1
-    const val alternateJoystickPort = -1
+    const val driverJoystickPort = 0
+    const val alternateJoystickPort = 1
 
     const val xboxPort = -1
 

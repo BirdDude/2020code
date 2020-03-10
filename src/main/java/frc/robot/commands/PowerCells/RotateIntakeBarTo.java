@@ -33,12 +33,13 @@ public class RotateIntakeBarTo extends CommandBase {
   @Override
   public void execute() {
     m_intakeSubsystem.m_intakeDeploy.config_kF(0, kF());
-    m_intakeSubsystem.m_intakeDeploy.set(ControlMode.MotionMagic, target);
-
+//    m_intakeSubsystem.m_intakeDeploy.set(ControlMode.MotionMagic, target);
   }
 
   @Override
   public boolean isFinished() { return false; }
+
+
 
   public class moveUp extends InstantCommand {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})

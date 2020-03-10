@@ -25,6 +25,9 @@ class Spin4Times(val m_spinSubsystem: SpinSubsystem) : CommandBase() {
     override fun execute() {
         if (!m_spinSubsystem.getNearestColor().equals(lastPos)) {
             count++
+            if (count - 8 == 0)  println("One Rotation Done!")
+            if (count - 16 == 0) println("Two Rotations Done!")
+            if (count - 24 == 0) println("Three Rotation Done!")
         }
         lastPos = m_spinSubsystem.getNearestColor()
     }

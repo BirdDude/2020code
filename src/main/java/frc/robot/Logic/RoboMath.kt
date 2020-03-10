@@ -13,9 +13,9 @@ object RoboMath {
         return Math.sin(Angle)*Distance
     }
 
-    fun powerLevel(distance: Double): Double {
-        return ((distance * 100.0/81.0) * //Distance -> m/s
-                60.0 )/ 0.478778720368 / Constants.maxShooterRPM //m/s -> setValue (-1.0 to 1.0)
+    fun shooterPower(distance: Double): Double {
+        val factor = 1.0
+        return distance * factor
     }
 
 

@@ -9,51 +9,43 @@ package frc.robot.commands.Autonomous;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.ExampleClasses.ExampleSubsystem;
 import frc.robot.subsystems.Drivetrain.DriveSubsystem;
+import frc.robot.subsystems.Inputs.Jetson.VisionSubsystem;
 
 /**
  * An example command that uses an example subsystem.
  */
-public class ForceDrive extends CommandBase {
+public class RotateUntillPowerPort extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem m_driveSubsystem;
-  private Double x, y, r, t;
-  private long startTime;
-  public Boolean end = false;
+  private final VisionSubsystem m_visionSubsystem;
 
+  public RotateUntillPowerPort(DriveSubsystem drive, VisionSubsystem vision) {
+    m_driveSubsystem = drive;
+    m_visionSubsystem = vision;
 
-  public ForceDrive(DriveSubsystem subsystem, Double x, Double y, Double r, Double time) {
-    m_driveSubsystem = subsystem;
-    this.x = x;
-    this.y = y;
-    this.r = r;
-    this.t = time;
-
-    addRequirements(subsystem);
+    addRequirements(drive);
   }
 
   @Override
   public void initialize() {
-    m_driveSubsystem.autoCartesian(y, x, r);
-    startTime = System.currentTimeMillis();
+    m_driveSubsystem.autoCartesian(0, 0, 0.75);
   }
 
   @Override
   public void execute() {
-    m_driveSubsystem.autoCartesian(y, x, r);
+    System.out.println(m_visionSubsystem.getPowerPortBearing());
+    m_driveSubsystem.autoCartesian(0, 0, 0.75);
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_driveSubsystem.autoCartesian(0.0, 0.0, 0.0);
+    m_driveSubsystem.autoCartesian(0,0,0);
+    System.out.println("done!");
   }
 
   @Override
   public boolean isFinished() {
-    return (System.currentTimeMillis() - startTime) >= t * 1000;
+    return m_visionSubsystem.getPowerPortBearing() != Double.MIN_VALUE;
   }
-
-
-
 }

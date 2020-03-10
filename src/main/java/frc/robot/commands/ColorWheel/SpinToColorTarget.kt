@@ -9,8 +9,11 @@ import frc.robot.subsystems.ColorWheel.SpinSubsystem
  * An example command that uses an example subsystem.
  */
 class SpinToColorTarget(val m_SpinSubsystem: SpinSubsystem) : CommandBase() {
-    private val m_colorTarget = DriverStation.getInstance().gameSpecificMessage
-    private val hasColor = m_colorTarget.equals("Y") || m_colorTarget.equals("B") || m_colorTarget.equals("G") || m_colorTarget.equals("R")
+    private val m_colorList = listOf<String>("B", "G", "R", "Y")
+
+    private val m_color = DriverStation.getInstance().gameSpecificMessage
+    private val hasColor = m_color.equals("Y") || m_color.equals("B") || m_color.equals("G") || m_color.equals("R")
+    private val m_colorTarget = m_colorList.get((m_colorList.indexOf(m_color) + 2) % 4)
 
     init {
         addRequirements(m_SpinSubsystem)
@@ -27,16 +30,7 @@ class SpinToColorTarget(val m_SpinSubsystem: SpinSubsystem) : CommandBase() {
         }
         else {
             println("Starting to Spin!")
-            if (currentPos.equals("Blue") && m_colorTarget.equals("Y")) spinPos = true
-            else if (currentPos.equals("Green") && m_colorTarget.equals("B")) spinPos = true
-            else if (currentPos.equals("Red") && m_colorTarget.equals("G")) spinPos = true
-            else if (currentPos.equals("Yellow") && m_colorTarget.equals("R")) spinPos = true
-
-            if (spinPos) {
-                m_SpinSubsystem.rotatorMotor.set(0.66)
-            } else {
-                m_SpinSubsystem.rotatorMotor.set(-0.66)
-            }
+            m_SpinSubsystem.rotatorMotor.set(-0.66)
         }
     }
 

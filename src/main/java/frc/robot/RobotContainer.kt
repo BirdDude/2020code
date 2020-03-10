@@ -1,7 +1,6 @@
 /*----------------------------------------------------------------------------*/ /* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */ /* Open Source Software - may be modified and shared by FRC teams. The code   */ /* must be accompanied by the FIRST BSD license file in the root directory of */ /* the project.                                                               */ /*----------------------------------------------------------------------------*/
 package frc.robot
 
-import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController
@@ -14,29 +13,38 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.ConditionalCommand
 import edu.wpi.first.wpilibj2.command.MecanumControllerCommand
+import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.WaitCommand
+import edu.wpi.first.wpilibj2.command.button.Button
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
+import frc.robot.commands.Autonomous.DriveDistance
 import frc.robot.commands.Autonomous.DriveToPowerPort
 import frc.robot.commands.Autonomous.ForceDrive
+import frc.robot.commands.Autonomous.RotateUntillPowerPort
 import frc.robot.commands.Climber.Lifter
 import frc.robot.commands.Climber.Winch
+import frc.robot.commands.ColorWheel.Actuator
+import frc.robot.commands.ColorWheel.Spin4Times
+import frc.robot.commands.ColorWheel.SpinToColorTarget
 import frc.robot.commands.Drivetrain.DefaultDrive
-import frc.robot.commands.Drivetrain.RotateTo
+import frc.robot.commands.Drivetrain.RotateToPowerPort
 import frc.robot.commands.PowerCells.Intake
 import frc.robot.commands.PowerCells.RotateIntakeBarTo
 import frc.robot.commands.PowerCells.Shooter
 import frc.robot.commands.PowerCells.Storage
 import frc.robot.subsystems.Climber.ClimberSubsystem
 import frc.robot.subsystems.ColorWheel.ActuatorSubsystem
+import frc.robot.subsystems.ColorWheel.SpinSubsystem
 import frc.robot.subsystems.Drivetrain.DriveSubsystem
 import frc.robot.subsystems.Inputs.JoystickSubsystem
 import frc.robot.subsystems.Inputs.Jetson.VisionSubsystem
+import frc.robot.subsystems.Inputs.LidarSubsystem
 import frc.robot.subsystems.PowerCells.IntakeSubsystem
 import frc.robot.subsystems.PowerCells.ShooterSubsystem
 import frc.robot.subsystems.PowerCells.TransportSubsystem
-import java.util.List
+import org.ejml.equation.IntegerSequence
+import java.util.function.BooleanSupplier
 import java.util.function.Consumer
 import java.util.function.Supplier
 
@@ -51,21 +59,19 @@ import java.util.function.Supplier
 class RobotContainer {
 
     private val driverJoystick: Joystick
-//    private val alternateJoystick: Joystick
+    private val alternateJoystick: Joystick
 
     /** Subsystems*/
     private val m_driverJoystickSubsystem = JoystickSubsystem(Constants.driverJoystickPort)
-//    private val m_alternateJoystickSubsystem = JoystickSubsystem(Constants.alternateJoystickPort)
+    private val m_alternateJoystickSubsystem = JoystickSubsystem(Constants.alternateJoystickPort)
 
 //    private val m_xboxSubsystem = XboxSubsystem()
 
 
     private val m_driveSubsystem = DriveSubsystem()
     private val m_intakeSubsystem = IntakeSubsystem()
-//    private val m_controlPanelSubsystem = SpinSubsystem()
-    private val m_actuatorSubsystem = ActuatorSubsystem()
     private val m_climberSubsystem = ClimberSubsystem()
-//    private val m_LidarSubsystem = LidarSubsystem()
+    private val m_LidarSubsystem = LidarSubsystem()
     private val m_visionSubsystem = VisionSubsystem(Constants.visionHost, Constants.visionPort)
     private val m_shooterSubsystem = ShooterSubsystem()
     private val m_transportSubsystem = TransportSubsystem()
@@ -75,38 +81,43 @@ class RobotContainer {
 
     private val Lifter = Lifter(m_climberSubsystem)
     private val Winch = Winch(m_climberSubsystem)
-//    private val Actuator = Actuator(m_controlPanelSubsystem )
     private val Intake = Intake(m_intakeSubsystem)
-    private val shooter = Shooter(m_shooterSubsystem)
+    private val shooter = Shooter(m_shooterSubsystem, m_driverJoystickSubsystem)
     private val storage = Storage(m_transportSubsystem)
     private val Bar = RotateIntakeBarTo(m_intakeSubsystem)
+    private val rotateToPowerPort = RotateToPowerPort(m_driveSubsystem, m_visionSubsystem, m_driverJoystickSubsystem)
+//    private val spin4 = Spin4Times(m_controlPanelSubsystem)
+//    private val spinToColor = SpinToColorTarget(m_controlPanelSubsystem)
+
+  /** AUTO Commands */
+    private val rotateUntillPowerPort = RotateUntillPowerPort(m_driveSubsystem, m_visionSubsystem)
+    private val driveToPowerPort = DriveToPowerPort(m_driveSubsystem, m_visionSubsystem, 1.5)
 
 
-    var runTime = 0.2
-    var waitTime = 0.5
+    var runTime = 1.00
+    var waitTime = 0.0
+//    var power = 0.5 //Three Balls
+//    var power = 0.46 //Two Balls
+    var power = 0.32 //0.422
 
-    val shoot = storage.ForceRun(-0.5).andThen(WaitCommand(0.2)).andThen(storage.Stop()).andThen(WaitCommand(1.0))
+    val shoot = storage.ForceRun(-0.5).andThen(WaitCommand(0.1)).andThen(storage.Stop()).andThen(WaitCommand(2.0))
             .andThen(storage.Run()).andThen(WaitCommand(runTime)).andThen(storage.Stop()).andThen(WaitCommand(waitTime))
             .andThen(storage.Run()).andThen(WaitCommand(runTime)).andThen(storage.Stop()).andThen(WaitCommand(waitTime))
             .andThen(storage.Run()).andThen(WaitCommand(runTime)).andThen(storage.Stop()).andThen(WaitCommand(waitTime))
             .andThen(storage.Run()).andThen(WaitCommand(runTime)).andThen(storage.Stop()).andThen(WaitCommand(waitTime))
             .andThen(storage.Run()).andThen(WaitCommand(runTime)).andThen(storage.Stop()).andThen(WaitCommand(waitTime))
             .andThen(storage.Run()).andThen(WaitCommand(runTime)).andThen(storage.Stop()).andThen(WaitCommand(waitTime))
+            .andThen(PrintCommand("Done Shooting!"))
+
+
+    val spinStorage = shooter.ForceRun(-0.1).alongWith(storage.ForceRun(0.45))
 
 
     val config: TrajectoryConfig = TrajectoryConfig(Constants.forwardMaxVel,
             Constants.forwardMaxAcc) // Add kinematics to ensure max speed is actually obeyed
             .setKinematics(m_driveSubsystem.kDriveKinematics)
 
-    var exampleTrajectory: Trajectory = TrajectoryGenerator.generateTrajectory( // Start at the origin facing the +X direction
-            Pose2d(0.0, 0.0, Rotation2d(0.0)),  // Pass through these two interior waypoints, making an 's' curve path
-            List.of(
-                    Translation2d(1.0, 1.0),
-                    Translation2d(2.0, -1.0)
-            ),  // End 3 meters straight ahead of where we started, facing forward
-            Pose2d(3.0, 0.0, Rotation2d(0.0)),
-            config
-    )
+
 
 
     /**
@@ -115,49 +126,75 @@ class RobotContainer {
      * [edu.wpi.first.wpilibj2.command.button.JoystickButton].
      */
     private fun configureButtonBindings() {
-        //Run Interior to Shoot WHILE shooter is revved
-        var tempMaxVel = 0.0
-        var tempMaxAcc = 0.0
-        //Spool Shooter
-        JoystickButton(driverJoystick, 2).whenPressed(shooter.ForceRun(-0.3).alongWith(storage.ForceRun(0.3))).whenReleased(shooter.Stop().alongWith(storage.Stop()))
+        var twoPressed = false
+
+        //@TODO CHANGE KEYBINDS
+
+        //Begins to Shoot Balls
+        JoystickButton(driverJoystick, 1).whenPressed(PrintCommand("Shooting!"))
+                .whenPressed(shooter.ForceRun(power).alongWith(shoot)).whenInactive(shooter.Stop().alongWith(storage.Stop()))
 
 
-        JoystickButton(driverJoystick, 1).whenPressed(shooter.ForceRun(0.65).alongWith(shoot)).whenInactive(shooter.Stop().alongWith(storage.Stop()))
+
+        //Run Storage
+        JoystickButton(driverJoystick, 2).whenPressed(PrintCommand("Running Storage!")).whenPressed(spinStorage).whenReleased(shooter.Stop().alongWith(storage.Stop()))
+
         //Run Intake
-        JoystickButton(driverJoystick, 3).or(JoystickButton(driverJoystick, 4))
-                .whileActiveOnce(Bar.moveDown().andThen(Intake.Run()))
-                .whenInactive(Intake.Stop().andThen(Bar.moveUp()))
+        JoystickButton(driverJoystick, 3).or(JoystickButton(driverJoystick, 4)).or(JoystickButton(driverJoystick, 11))
+                .whileActiveOnce(Bar.moveDown().andThen(WaitCommand(0.5).andThen(Intake.Run())).alongWith(PrintCommand("Running Intake!")))
+                .whenInactive(Intake.Stop().andThen(WaitCommand(0.2).andThen(Bar.moveUp())))
 
-        //Reverse Intake
-         JoystickButton(driverJoystick, 5).or(JoystickButton(driverJoystick, 6))
-                 .whileActiveOnce(Bar.moveDown().andThen(Intake.Reverse()))
-                 .whenInactive(Intake.Stop().andThen(Bar.moveUp()))
+            //Reverse Intake
+        JoystickButton(driverJoystick, 5).or(JoystickButton(driverJoystick, 6)).or(JoystickButton(driverJoystick, 9))
+                .whileActiveOnce(Bar.moveDown().andThen(WaitCommand(0.5).andThen(Intake.Reverse()).alongWith(PrintCommand("Reversing Intake!"))))
+                .whenInactive(Intake.Stop().andThen(WaitCommand(0.2).andThen(Bar.moveUp())))
 
+        JoystickButton(driverJoystick, 8).whenPressed(Runnable {
+            println("" + (power + 0.002 * (-driverJoystick.throttle + 1))) })
 
+        /** ABORT */
+        JoystickButton(driverJoystick, 12).whenPressed(shooter.ForceRun(-1.0).alongWith(storage.ForceRun(-0.8)))
+                .whenReleased(shooter.Stop().alongWith(storage.Stop() ))
 
-        JoystickButton(driverJoystick, 3).whenPressed(Intake.Run()).whenReleased(Intake.Stop())
-
-        JoystickButton(driverJoystick, 4).whenPressed(Bar)
-
-        JoystickButton(driverJoystick, 12).whenPressed(Bar.moveUp())
-        JoystickButton(driverJoystick, 10).whenPressed(Bar.moveDown())
-        JoystickButton(driverJoystick, 6).whenPressed(Runnable { m_intakeSubsystem.m_intakeDeploy.selectedSensorPosition = 0})
-
-        JoystickButton(driverJoystick, 5).whileHeld(Runnable {
-            tempMaxVel = Math.max(tempMaxVel, m_driveSubsystem.maxSpeed)
-            tempMaxAcc = Math.max(tempMaxAcc, m_driveSubsystem.getWheelAcc())
-            println("maxSpeed: $tempMaxVel \nmaxAcc: $tempMaxAcc")
-        })
-        //Rotate Counter-Clockwise
-//        JoystickButton(driverJoystick, 9).whenPressed(RotateTo(-90.0, m_driveSubsystem).withTimeout(1.5))
-//
-//        //Rotate Clockwise
-//        JoystickButton(driverJoystick, 10).whenPressed(RotateTo(90.0, m_driveSubsystem).withTimeout(1.5))
+          //Rotate to VisionPort
+        Button(BooleanSupplier { driverJoystick.getPOV() == 0 })
+                .whileActiveContinuous(rotateToPowerPort)
+                .whenInactive(getCartesianDrive());
 
 
 
+        /** MECHANICAL JOYSTICK **/
+        //Run Winch
+        JoystickButton(alternateJoystick, 1).whenPressed(Winch.Run()).whenReleased(Winch.Stop())
+
+        //Run SPEED Winch
+        JoystickButton(alternateJoystick, 9).whenPressed(Winch.RunFast()).whenReleased(Winch.Stop())
+
+        //Toggle Spinner Height
+//        JoystickButton(alternateJoystick, 2).whenPressed(Runnable {
+//            if(twoPressed) {
+//                println("Extending!")
+//                twoPressed = false
+//                actuator.ExtendActuator().schedule()
+//            } else {
+//                println("Retracting!")
+//                twoPressed = true
+//                actuator.RetractActuator().schedule()
+//            }
+//        })
+
+        //Lower Lifter
+        JoystickButton(alternateJoystick, 3).or(JoystickButton(alternateJoystick, 5)).whileActiveOnce(Lifter.Lower()).whenInactive(Lifter.Stop())
+
+        //Raise Lifter
+        JoystickButton(alternateJoystick, 4).or(JoystickButton(alternateJoystick, 6)).whileActiveOnce(Lifter.Raise()).whenInactive(Lifter.Stop())
+
+        //Spin 4 Rotations
+//        JoystickButton(alternateJoystick, 11).whenPressed(spin4).whenReleased(Runnable { spin4.cancel() })
+
+        //Spin to Target Color
+//        JoystickButton(alternateJoystick, 12).whenPressed(spinToColor).whenReleased(Runnable { spinToColor.cancel() })
     }
-
 
     /**
      * Use this to pass the autonomous command to the main [Robot] class.
@@ -165,9 +202,14 @@ class RobotContainer {
      * @return the command to run in autonomous
      */
 
-//    fun getAutonomousCommand(): Command {
-//
-//    }
+    fun getAutonomousCommand(): Command {
+//        return autoPathSimple()
+//        return rotateUntillPowerPort.withTimeout(3.0).andThen(driveToPowerPort.withTimeout(5.0))
+//                .andThen(shoot.withTimeout(7.0)).andThen(ForceDrive(m_driveSubsystem, -0.5, 0.0, 0.0)).andThen(WaitCommand(2.0))
+//                .andThen(ForceDrive(m_driveSubsystem, 0.0, 0.0, 0.0))
+
+        return driveToPowerPort
+    }
 
 
 
@@ -180,25 +222,44 @@ class RobotContainer {
     init {
 
         driverJoystick = m_driverJoystickSubsystem.joystick
-//        alternateJoystick = m_alternateJoystickSubsystem.joystick
+        alternateJoystick = m_alternateJoystickSubsystem.joystick
         m_visionSubsystem.startUp()
 
-
         // Configure the button bindings
-
         configureButtonBindings()
-        m_defaultDrive.initialize()
+
+//        m_defaultDrive.initialize()
+        Bar.initialize()
 
     }
+
 
     fun getCartesianDrive():Command {
         return m_defaultDrive
     }
 
+    fun getRunBar(): Command {
+        return Bar
+    }
+
+    fun getVision() : VisionSubsystem {
+        return m_visionSubsystem
+    }
+
+    var exampleTrajectory: Trajectory = TrajectoryGenerator.generateTrajectory( // Start at the origin facing the +X direction
+            Pose2d(0.0, 0.0, Rotation2d(0.0)),  // Pass through these two interior waypoints, making an 's' curve path
+            listOf(
+                    Translation2d(1.0, 1.0),
+                    Translation2d(2.0, -1.0)
+            ),  // End 3 meters straight ahead of where we started, facing forward
+            Pose2d(3.0, 0.0, Rotation2d(0.0)),
+            config
+    )
+
 
     fun generatePathfindingCommand(trajectory: Trajectory): Command {
         return MecanumControllerCommand(
-                trajectory,
+                exampleTrajectory,
                 Supplier { m_driveSubsystem.getMPose() },
                 SimpleMotorFeedforward(Constants.ks, Constants.kv, Constants.ka),
                 m_driveSubsystem.kDriveKinematics,
@@ -216,16 +277,11 @@ class RobotContainer {
         )
     }
 
+
     fun autoPathSimple():Command {
-        return DriveToPowerPort(m_driveSubsystem, m_visionSubsystem, 0.3).andThen(
-                shoot.withTimeout(4.0)
-        ).andThen(
-                ForceDrive(m_driveSubsystem, -0.75, 0.0, 0.0)
-        ).andThen(
-                WaitCommand(3.0)
-        ).andThen(
-                ForceDrive(m_driveSubsystem, 0.0, 0.0, 0.0)
-        )
+//        return DriveDistance(m_driveSubsystem, 0.5, 1.5).andThen(ForceDrive(m_driveSubsystem, 0.0, 0.0, 0.0).perpetually())
+        return ForceDrive(m_driveSubsystem, 0.5, 0.0, 0.0, 2.0)
     }
+
 
 }

@@ -15,7 +15,7 @@ import frc.robot.Constants
 class SpinSubsystem : SubsystemBase() {
 
     var rotatorMotor = WPI_VictorSPX(Constants.rotatorPort)
-    var colorSensor = ColorSensorV3(I2C.Port.kOnboard)
+    var colorSensor = ColorSensorV3(I2C.Port.kMXP)
     private var color = colorSensor.color
     private val m_colorMatcher = ColorMatch()
     private val kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429)

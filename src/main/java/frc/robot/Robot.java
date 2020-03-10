@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -31,7 +32,12 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    m_autonomousCommand = m_robotContainer.autoPathSimple();
+    m_robotContainer.getVision().startUp();
+//    m_autonomousCommand = m_robotContainer.autoPathSimple();
+
+    // TODO: IMPLEMENT BACK HOME
+//    CameraServer.getInstance().addAxisCamera("http://10.43.30.20:8080/?action=stream"); //DELETE
+
   }
 
   /**
@@ -67,12 +73,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-//    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    m_robotContainer.getRunBar().schedule();
+
+
   }
 
   /**
@@ -80,6 +89,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    if (!m_autonomousCommand.isScheduled()) {
+
+    }
   }
 
   @Override
@@ -92,6 +104,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     m_robotContainer.getCartesianDrive().schedule();
+    m_robotContainer.getRunBar().schedule();
+
   }
 
   /**

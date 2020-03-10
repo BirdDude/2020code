@@ -19,7 +19,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public WPI_TalonSRX m_intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployPort);
   public WPI_VictorSPX m_intake = new WPI_VictorSPX(Constants.intakePort);
-  public WPI_VictorSPX m_innerIntake = new WPI_VictorSPX(Constants.insideIntakePort);
+  public WPI_TalonSRX m_innerIntake = new WPI_TalonSRX(Constants.insideIntakePort);
 
   public int intakeEncoderTicks = 0;
 
@@ -29,14 +29,14 @@ public class IntakeSubsystem extends SubsystemBase {
     m_intakeDeploy.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     m_intakeDeploy.configMotionSCurveStrength(2);
 
-    m_intakeDeploy.config_kP(0, 0.0); //0.2903 (maybe)
+    m_intakeDeploy.config_kP(0, 0.2903*4 ); //0.2903 (maybe)
     m_intakeDeploy.config_kI(0, 0.0);
     m_intakeDeploy.config_kD(0, 0.0);
 
     m_intakeDeploy.config_kF(0, 0.5);
 
-    m_intakeDeploy.configMotionAcceleration(20);
-    m_intakeDeploy.configMotionCruiseVelocity(400);
+    m_intakeDeploy.configMotionAcceleration(160*4);
+    m_intakeDeploy.configMotionCruiseVelocity(1600*2);
 
   }
 

@@ -9,6 +9,7 @@ package frc.robot.commands.PowerCells;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.Inputs.JoystickSubsystem;
 import frc.robot.subsystems.PowerCells.ShooterSubsystem;
 
 /**
@@ -16,7 +17,12 @@ import frc.robot.subsystems.PowerCells.ShooterSubsystem;
  */
 public final class Shooter {
   private ShooterSubsystem m_shooterSubsystem;
-  public Shooter(ShooterSubsystem shoot) { m_shooterSubsystem = shoot; }
+  private JoystickSubsystem m_joystickSubsystem;
+
+  public Shooter(ShooterSubsystem shoot, JoystickSubsystem joy) {
+    m_shooterSubsystem = shoot;
+    m_joystickSubsystem = joy;
+  }
 
   public class ForceRun extends InstantCommand {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
@@ -29,7 +35,9 @@ public final class Shooter {
     }
 
     @Override
-    public void initialize() { m_shooterSubsystem.m_flyWheel.set(speed); }
+    public void initialize() {
+      System.out.println(speed + 0.002*(-m_joystickSubsystem.getJoystick().getThrottle() + 1));
+      m_shooterSubsystem.m_flyWheel.set(speed + 0.002*(-m_joystickSubsystem.getJoystick().getThrottle() + 1)); }
   }
 
   public class Run extends CommandBase {

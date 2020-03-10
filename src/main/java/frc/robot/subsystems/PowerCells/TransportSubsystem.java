@@ -9,15 +9,16 @@ package frc.robot.subsystems.PowerCells;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class TransportSubsystem extends SubsystemBase {
 
-  public WPI_TalonSRX m_storage = new WPI_TalonSRX(Constants.transportPort);
+  public WPI_VictorSPX m_storage = new WPI_VictorSPX(Constants.transportPort);
 
   public TransportSubsystem() {
-    m_storage.setInverted(true);
+
   }
 
   public void setPower(double power) {

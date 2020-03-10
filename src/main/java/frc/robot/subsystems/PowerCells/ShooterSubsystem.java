@@ -18,7 +18,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public WPI_VictorSPX m_flyWheel = new WPI_VictorSPX(Constants.shooterPort);
 
   public ShooterSubsystem() {
-    m_flyWheel.setInverted(true);
+    m_flyWheel.setInverted(false);
   }
 
   public void setPower(double power) {
