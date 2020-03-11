@@ -205,7 +205,8 @@ class RobotContainer {
 //                .andThen(shoot.withTimeout(7.0)).andThen(ForceDrive(m_driveSubsystem, -0.5, 0.0, 0.0)).andThen(WaitCommand(2.0))
 //                .andThen(ForceDrive(m_driveSubsystem, 0.0, 0.0, 0.0))
 
-        return auto.andThen(shooter.ForceRun(power).alongWith(shoot).alongWith(nullDrive)).whenInactive(shooter.Stop().alongWith(storage.Stop()))
+        // Drive to the port and then shoot the balls while keeping the moter safty fed
+        return auto.andThen(shooter.ForceRun(power).alongWith(shoot).alongWith(nullDrive))
     }
 
 
